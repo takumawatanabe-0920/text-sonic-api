@@ -9,6 +9,9 @@ cryptography
 PyYAML>=6.0
 colorlog
 prisma
-pylint==2.6.0
-black
-isort
+pylint
+# lint
+black # black $(git ls-files '*.py')
+isort # isort .
+autoflake
+# lint end

@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import Optional
 
 from pydantic import BaseModel
 
@@ -25,8 +24,8 @@ class WritingCreate(WritingBase):
 
 
 class WritingUpdate(BaseModel):
-    title: Optional[str] = None
-    description: Optional[str] = None
+    title: str
+    description: str
 
 
 class Writing(WritingBase):

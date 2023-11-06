@@ -1,15 +1,16 @@
-from typing import List, Optional
-
+from fastapi import HTTPException
 from prisma.types import WritingUpdateInput
 
 from app.main.infrastructure.prisma_service import prisma
-from app.main.infrastructure.schemas.writing_schema import (WritingCreate,
-                                                            WritingGet,
-                                                            WritingUpdate)
+from app.main.infrastructure.schemas.writing_schema import (
+    WritingCreate,
+    WritingGet,
+    WritingUpdate,
+)
 
 
 class WritingRepository:
-    async def save(self, writing: WritingCreate) -> Optional[WritingGet]:
+    async def save(self, writing: WritingCreate) -> WritingGet:
         created_writing = await prisma.writing.create(
             {
                 "title": writing.title,
@@ -25,11 +26,11 @@ class WritingRepository:
             updated_at=created_writing.updated_at,
         )
 
-    async def get_by_id(self, id: str) -> Optional[WritingGet]:
+    async def get_by_id(self, id: str) -> WritingGet:
         writing = await prisma.writing.find_unique(where={"id": id})
 
         if not writing:
-            return None
+            raise HTTPException(status_code=404, detail="Writing not found")
 
         return WritingGet(
             id=writing.id,
@@ -39,7 +40,7 @@ class WritingRepository:
             updated_at=writing.updated_at,
         )
 
-    async def get_all(self) -> List[WritingGet]:
+    async def get_all(self) -> list[WritingGet]:
         writings = await prisma.writing.find_many()
 
         return [
@@ -53,7 +54,7 @@ class WritingRepository:
             for writing in writings
         ]
 
-    async def update(self, id: str, writing: WritingUpdate) -> Optional[WritingGet]:
+    async def update(self, id: str, writing: WritingUpdate) -> WritingGet:
         data: WritingUpdateInput = {}
         title = writing.title
         description = writing.description
@@ -70,7 +71,7 @@ class WritingRepository:
         )
 
         if not updated_writing:
-            return None
+            raise HTTPException(status_code=404, detail="Writing not found")
 
         return WritingGet(
             id=updated_writing.id,

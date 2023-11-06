@@ -3,15 +3,19 @@ from typing import List
 from fastapi import Depends
 
 from app.core.log.logger import logger
-from app.main.infrastructure.schemas.writing_schema import (WritingCreate,
-                                                            WritingGet,
-                                                            WritingUpdate)
+from app.main.infrastructure.schemas.writing_schema import (
+    WritingCreate,
+    WritingGet,
+    WritingUpdate,
+)
 from app.main.repository.writing_repository import WritingRepository
-from app.main.writings.dto.request_dto import (CreateWritingBodyDto,
-                                               UpdateWritingBodyDto)
-from app.main.writings.dto.response_dto import (StatusResponse, WritingDto,
-                                                WritingResponse,
-                                                WritingsResponse)
+from app.main.writings.dto.request_dto import CreateWritingBodyDto, UpdateWritingBodyDto
+from app.main.writings.dto.response_dto import (
+    StatusResponse,
+    WritingDto,
+    WritingResponse,
+    WritingsResponse,
+)
 
 
 class WritingService:
