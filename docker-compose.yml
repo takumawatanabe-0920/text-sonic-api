@@ -1,0 +1,25 @@
+version: "3.0"
+
+services:
+  text-sonic-api:
+    container_name: "text-sonic-api"
+    volumes:
+      - ./app:/app
+    build: .
+    ports:
+      - 8082:8082
+  text-sonic-db:
+    image: mysql:8.0.28
+    # M1チップ対応のため追記
+    platform: linux/x86_64
+    # 環境ファイルでパスワード等を設定
+    ports:
+      - '3308:3306'
+    volumes:
+      - ./docker/mysql/settings/initdb.d:/docker-entrypoint-initdb.d
+      - ./docker/mysql/data:/var/lib/mysql
+      - ./docker/mysql/logs:/var/log/mysql
+    environment:
+      MYSQL_DATABASE: text-sonic
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: password
