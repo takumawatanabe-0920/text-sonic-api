@@ -67,6 +67,7 @@ class WritingService:
         try:
             await self.__writing_repository.delete(id_)
             return StatusResponse(message="OK")
+        # pylint: disable=broad-exception-caught
         except Exception as e:
             logger.error(e)
             return StatusResponse(message="NG")
