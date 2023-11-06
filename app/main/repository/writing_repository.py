@@ -1,6 +1,5 @@
-from fastapi import HTTPException
+from __future__ import annotations
 from prisma.types import WritingUpdateInput
-
 from app.main.infrastructure.prisma_service import prisma
 from app.main.infrastructure.schemas.writing_schema import (
     WritingCreate,
@@ -10,7 +9,7 @@ from app.main.infrastructure.schemas.writing_schema import (
 
 
 class WritingRepository:
-    async def save(self, writing: WritingCreate) -> WritingGet:
+    async def save(self, writing: WritingCreate) -> WritingGet | None:
         created_writing = await prisma.writing.create(
             {
                 "title": writing.title,
@@ -26,11 +25,11 @@ class WritingRepository:
             updated_at=created_writing.updated_at,
         )
 
-    async def get_by_id(self, id: str) -> WritingGet:
-        writing = await prisma.writing.find_unique(where={"id": id})
+    async def get_by_id(self, id_: str) -> WritingGet | None:
+        writing = await prisma.writing.find_unique(where={"id": id_})
 
         if not writing:
-            raise HTTPException(status_code=404, detail="Writing not found")
+            return None
 
         return WritingGet(
             id=writing.id,
@@ -54,7 +53,7 @@ class WritingRepository:
             for writing in writings
         ]
 
-    async def update(self, id: str, writing: WritingUpdate) -> WritingGet:
+    async def update(self, id_: str, writing: WritingUpdate) -> WritingGet | None:
         data: WritingUpdateInput = {}
         title = writing.title
         description = writing.description
@@ -66,12 +65,12 @@ class WritingRepository:
             data["description"] = description
 
         updated_writing = await prisma.writing.update(
-            where={"id": id},
+            where={"id": id_},
             data=data,
         )
 
         if not updated_writing:
-            raise HTTPException(status_code=404, detail="Writing not found")
+            return None
 
         return WritingGet(
             id=updated_writing.id,
@@ -81,7 +80,7 @@ class WritingRepository:
             updated_at=updated_writing.updated_at,
         )
 
-    async def delete(self, id: str) -> None:
-        await prisma.writing.delete(where={"id": id})
+    async def delete(self, id_: str) -> None:
+        await prisma.writing.delete(where={"id": id_})
 
         return None

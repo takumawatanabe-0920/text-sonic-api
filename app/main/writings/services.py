@@ -1,6 +1,4 @@
-from typing import List
-
-from fastapi import Depends
+from fastapi import Depends, HTTPException
 
 from app.core.log.logger import logger
 from app.main.infrastructure.schemas.writing_schema import (
@@ -29,10 +27,10 @@ class WritingService:
         writings = await self.__writing_repository.get_all()
         return self.__convert_list_response(writings)
 
-    async def get_writing_by_id(self, id: str) -> WritingResponse:
-        writing = await self.__writing_repository.get_by_id(id)
+    async def get_writing_by_id(self, id_: str) -> WritingResponse:
+        writing = await self.__writing_repository.get_by_id(id_)
         if not writing:
-            return WritingResponse(message=None)
+            raise HTTPException(status_code=404, detail="Writing not found")
 
         return WritingResponse(
             message=WritingDto(
@@ -49,31 +47,31 @@ class WritingService:
             WritingCreate(title=writing.title, description=writing.description)
         )
         if not created_writing:
-            return WritingResponse(message=None)
+            raise HTTPException(status_code=404, detail="Writing not found")
 
         return await self.get_writing_by_id(created_writing.id)
 
     async def update_writing(
-        self, id: str, writing: UpdateWritingBodyDto
+        self, id_: str, writing: UpdateWritingBodyDto
     ) -> WritingResponse:
         updated_writing = await self.__writing_repository.update(
-            id, WritingUpdate(title=writing.title, description=writing.description)
+            id_, WritingUpdate(title=writing.title, description=writing.description)
         )
 
         if not updated_writing:
-            return WritingResponse(message=None)
+            raise HTTPException(status_code=404, detail="Writing not found")
 
-        return await self.get_writing_by_id(id)
+        return await self.get_writing_by_id(id_)
 
-    async def delete_writing(self, id: str) -> StatusResponse:
+    async def delete_writing(self, id_: str) -> StatusResponse:
         try:
-            await self.__writing_repository.delete(id)
+            await self.__writing_repository.delete(id_)
             return StatusResponse(message="OK")
         except Exception as e:
             logger.error(e)
             return StatusResponse(message="NG")
 
-    def __convert_list_response(self, writings: List[WritingGet]) -> WritingsResponse:
+    def __convert_list_response(self, writings: list[WritingGet]) -> WritingsResponse:
         return WritingsResponse(
             message=[
                 WritingDto(

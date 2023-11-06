@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import List, Union
 
 from pydantic import BaseModel
 
@@ -13,11 +12,11 @@ class WritingDto(BaseModel):
 
 
 class WritingsResponse(BaseModel):
-    message: List[WritingDto]
+    message: list[WritingDto]
 
 
 class WritingResponse(BaseModel):
-    message: Union[WritingDto, None]
+    message: WritingDto
 
 
 # OK or NG
