@@ -7,8 +7,11 @@ from app.main.infrastructure.schemas.writing_schema import (
     WritingUpdate,
 )
 from app.main.repository.writing_repository import WritingRepository
-from app.main.writings.dto.request_dto import CreateWritingBodyDto, UpdateWritingBodyDto
-from app.main.writings.dto.response_dto import (
+from app.main.domain.writings.dto.request_dto import (
+    CreateWritingBodyDto,
+    UpdateWritingBodyDto,
+)
+from app.main.domain.writings.dto.response_dto import (
     StatusResponse,
     WritingDto,
     WritingResponse,

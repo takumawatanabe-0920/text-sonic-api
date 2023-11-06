@@ -10,3 +10,4 @@ PyYAML>=6.0
 colorlog
 prisma
 pylint
+google-cloud-texttospeech

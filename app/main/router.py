@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.main.infrastructure.prisma_service import prisma
-from app.main.writings.controllers import router as writing_router
+from app.main.domain.writings.controllers import router as writing_router
 
 from .middlware.log_middleware import LogMiddleware
 
