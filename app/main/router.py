@@ -1,8 +1,10 @@
-from fastapi.middleware.cors import CORSMiddleware
-from app.main.writings.controllers import router as writing_router
 from fastapi import FastAPI
-from .middlware.log_middleware import LogMiddleware
+from fastapi.middleware.cors import CORSMiddleware
+
 from app.main.infrastructure.prisma_service import prisma
+from app.main.writings.controllers import router as writing_router
+
+from .middlware.log_middleware import LogMiddleware
 
 app = FastAPI()
 app.add_middleware(LogMiddleware)
