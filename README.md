@@ -1,8 +1,8 @@
 # text-sonic-api
 
-server 側のセットアップ
+### set up
 
-server ディレクトリ配下に.env を用意する必要があります。
+you need to set .env file
 
 ```
 $ pip install --no-cache-dir --upgrade -r ./requirements.txt
