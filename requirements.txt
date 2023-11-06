@@ -10,8 +10,3 @@ PyYAML>=6.0
 colorlog
 prisma
 pylint
-# lint
-black # black $(git ls-files '*.py')
-isort # isort .
-autoflake
-# lint end
