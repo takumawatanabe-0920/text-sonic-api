@@ -39,6 +39,6 @@ class SpeechToTextClient:
         response = self.client.recognize(request=request)
 
         for result in response.results:
-            print(f"Transcript: {result.alternatives[0].transcript}")
+            print(f"Transcript: {result.alternatives[0].transcript}", result)
 
         return response
