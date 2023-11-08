@@ -1,7 +1,7 @@
 from fastapi import Depends
 
-from app.core.log.logger import logger
-from app.main.domain.common.dto.response_dto import StatusResponse
+from app.main.domain.speech_to_text.dto.response_dto import \
+    SpeechToTextResponseDto
 from app.main.speech_to_text.stt_client import SpeechToTextClient
 
 
@@ -12,12 +12,7 @@ class SpeechToTextService:
     ):
         self.text_to_speech_client = text_to_speech_client
 
-    async def convert_to_text(self, writing_id: str) -> StatusResponse:
-        try:
-            audio_file = "audio/" + writing_id + ".mp3"
-            self.text_to_speech_client.transcribe(audio_file)
-            return StatusResponse(message="OK")
-        # pylint: disable=broad-exception-caught
-        except Exception as e:
-            logger.error(e)
-            return StatusResponse(message="NG")
+    async def convert_to_text(self, writing_id: str) -> SpeechToTextResponseDto:
+        audio_file = "audio/" + writing_id + ".mp3"
+        response = self.text_to_speech_client.transcribe(audio_file)
+        return SpeechToTextResponseDto(message=response)
