@@ -5,15 +5,17 @@ from app.main.speech_to_text.stt_client import SpeechToTextClient
 from app.main.domain.common.dto.response_dto import StatusResponse
 
 
-class TextToSpeechService:
+class SpeechToTextService:
     def __init__(
         self,
         text_to_speech_client: SpeechToTextClient = Depends(SpeechToTextClient),
     ):
         self.text_to_speech_client = text_to_speech_client
 
-    async def convert_to_speech(self, writing_id: str) -> StatusResponse:
+    async def convert_to_text(self, writing_id: str) -> StatusResponse:
         try:
+            audio_file = "audio/" + writing_id + ".mp3"
+            self.text_to_speech_client.transcribe(audio_file)
             return StatusResponse(message="OK")
         # pylint: disable=broad-exception-caught
         except Exception as e:

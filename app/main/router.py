@@ -1,10 +1,14 @@
+from pydoc import text
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.main.infrastructure.prisma_service import prisma
 from app.main.domain.writings.controllers import router as writing_router
-from app.main.domain.writing_to_texts.controllers import (
+from app.main.domain.writing_to_speech.controllers import (
     router as writing_to_text_router,
+)
+from app.main.domain.speech_to_text.controllers import (
+    router as speech_to_text_router,
 )
 
 from .middlware.log_middleware import LogMiddleware
@@ -25,6 +29,7 @@ app.add_middleware(
 )
 app.include_router(writing_router)
 app.include_router(writing_to_text_router)
+app.include_router(speech_to_text_router)
 
 
 @app.on_event("startup")

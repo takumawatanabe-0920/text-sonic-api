@@ -6,7 +6,7 @@ from app.main.text_to_speech.tts_client import TextToSpeechClient
 from app.main.domain.common.dto.response_dto import StatusResponse
 
 
-class WritingToTextService:
+class WritingToSpeechService:
     def __init__(
         self,
         writing_service: WritingService = Depends(WritingService),
