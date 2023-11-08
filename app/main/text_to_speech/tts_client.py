@@ -1,8 +1,11 @@
 import json
 import os
 
+from dotenv import load_dotenv
 from google.cloud import texttospeech
 from google.oauth2 import service_account
+
+load_dotenv()
 
 # get credentials from environment variable
 credentials_json = os.getenv("GOOGLE_APPLICATION_CREDENTIALS_JSON") or "{}"

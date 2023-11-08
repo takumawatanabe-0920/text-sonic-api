@@ -1,11 +1,14 @@
 import json
 import os
 
+from dotenv import load_dotenv
 from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 from google.oauth2 import service_account
 
-project_id = os.getenv("GOOGLE_CLOUD_PROJECT", "text-sonic-api")
+load_dotenv()
+
+project_id = os.getenv("PROJECT_ID", "")
 
 # get credentials from environment variable
 credentials_json = os.getenv("GOOGLE_APPLICATION_CREDENTIALS_JSON") or "{}"
