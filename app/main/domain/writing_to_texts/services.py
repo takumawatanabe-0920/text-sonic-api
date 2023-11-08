@@ -19,8 +19,9 @@ class WritingToTextService:
         try:
             writing = await self.writing_service.get_writing_by_id(writing_id)
 
+            file_name = writing.message.id + ".mp3"
             self.text_to_speech_client.synthesize_speech(
-                writing.message.description, "./audio/"
+                writing.message.description, "audio/" + file_name
             )
             return StatusResponse(message="OK")
         # pylint: disable=broad-exception-caught
