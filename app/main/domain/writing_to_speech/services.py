@@ -1,9 +1,9 @@
 from fastapi import Depends
 
 from app.core.log.logger import logger
+from app.main.domain.common.dto.response_dto import StatusResponse
 from app.main.domain.writings.services import WritingService
 from app.main.text_to_speech.tts_client import TextToSpeechClient
-from app.main.domain.common.dto.response_dto import StatusResponse
 
 
 class WritingToSpeechService:

@@ -1,8 +1,9 @@
 from typing import Annotated
+
 from fastapi import APIRouter, Depends
 
-from app.main.domain.speech_to_text.services import SpeechToTextService
 from app.main.domain.common.dto.response_dto import StatusResponse
+from app.main.domain.speech_to_text.services import SpeechToTextService
 
 router = APIRouter()
 

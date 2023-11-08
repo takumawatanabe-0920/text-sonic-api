@@ -1,8 +1,9 @@
+import json
+import os
+
 from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 from google.oauth2 import service_account
-import os
-import json
 
 project_id = os.getenv("GOOGLE_CLOUD_PROJECT", "text-sonic-api")
 

@@ -2,17 +2,12 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends
 
-from app.main.domain.writings.dto.request_dto import (
-    CreateWritingBodyDto,
-    UpdateWritingBodyDto,
-)
-from app.main.domain.writings.services import WritingService
-
-from app.main.domain.writings.dto.response_dto import (
-    WritingResponse,
-    WritingsResponse,
-)
 from app.main.domain.common.dto.response_dto import StatusResponse
+from app.main.domain.writings.dto.request_dto import (CreateWritingBodyDto,
+                                                      UpdateWritingBodyDto)
+from app.main.domain.writings.dto.response_dto import (WritingResponse,
+                                                       WritingsResponse)
+from app.main.domain.writings.services import WritingService
 
 router = APIRouter()
 

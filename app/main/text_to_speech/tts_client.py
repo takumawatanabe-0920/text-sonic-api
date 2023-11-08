@@ -1,7 +1,8 @@
+import json
+import os
+
 from google.cloud import texttospeech
 from google.oauth2 import service_account
-import os
-import json
 
 # get credentials from environment variable
 credentials_json = os.getenv("GOOGLE_APPLICATION_CREDENTIALS_JSON") or "{}"
