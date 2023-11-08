@@ -16,7 +16,8 @@ class TextToSpeechClient:
         self.client = texttospeech.TextToSpeechClient(credentials=credentials)
         # voice gender ("neutral")
         self.voice = texttospeech.VoiceSelectionParams(
-            language_code="en-US", ssml_gender=texttospeech.SsmlVoiceGender.NEUTRAL
+            language_code="en-US",
+            ssml_gender=texttospeech.SsmlVoiceGender.NEUTRAL,
         )
         self.audio_config = texttospeech.AudioConfig(
             audio_encoding=texttospeech.AudioEncoding.MP3
