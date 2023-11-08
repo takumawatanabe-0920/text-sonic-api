@@ -2,10 +2,12 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends
 
-from app.main.writings.dto.request_dto import CreateWritingBodyDto, UpdateWritingBodyDto
-from app.main.writings.services import WritingService
-
-from .dto.response_dto import StatusResponse, WritingResponse, WritingsResponse
+from app.main.domain.common.dto.response_dto import StatusResponse
+from app.main.domain.writings.dto.request_dto import (CreateWritingBodyDto,
+                                                      UpdateWritingBodyDto)
+from app.main.domain.writings.dto.response_dto import (WritingResponse,
+                                                       WritingsResponse)
+from app.main.domain.writings.services import WritingService
 
 router = APIRouter()
 
@@ -17,7 +19,7 @@ async def get_writings(
     return await writing_service.get_writings()
 
 
-@router.get("/writings/{id}", response_model=WritingResponse)
+@router.get("/writings/{id_}", response_model=WritingResponse)
 async def get_writing_by_id(
     id_: str, writing_service: Annotated[WritingService, Depends(WritingService)]
 ) -> WritingResponse:
@@ -32,7 +34,7 @@ async def create_writing(
     return await writing_service.create_writing(reqBody)
 
 
-@router.put("/writings/{id}", response_model=WritingResponse)
+@router.put("/writings/{id_}", response_model=WritingResponse)
 async def update_writing(
     id_: str,
     reqBody: UpdateWritingBodyDto,
@@ -41,7 +43,7 @@ async def update_writing(
     return await writing_service.update_writing(id_, reqBody)
 
 
-@router.delete("/writings/{id}", response_model=StatusResponse)
+@router.delete("/writings/{id_}", response_model=StatusResponse)
 async def delete_writing(
     id_: str, writing_service: Annotated[WritingService, Depends(WritingService)]
 ) -> StatusResponse:

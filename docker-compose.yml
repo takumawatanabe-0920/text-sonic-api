@@ -1,13 +1,13 @@
 version: "3.0"
 
 services:
-  text-sonic-api:
-    container_name: "text-sonic-api"
-    volumes:
-      - ./app:/app
-    build: .
-    ports:
-      - 8082:8082
+  # text-sonic-api:
+  #   container_name: "text-sonic-api"
+  #   volumes:
+  #     - ./app:/app
+  #   build: .
+  #   ports:
+  #     - 8082:8082
   text-sonic-db:
     image: mysql:8.0.28
     # M1チップ対応のため追記

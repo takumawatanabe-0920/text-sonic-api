@@ -17,8 +17,3 @@ class WritingsResponse(BaseModel):
 
 class WritingResponse(BaseModel):
     message: WritingDto
-
-
-# OK or NG
-class StatusResponse(BaseModel):
-    message: str
