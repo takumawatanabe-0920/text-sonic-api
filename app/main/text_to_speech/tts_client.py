@@ -1,12 +1,13 @@
 from google.cloud import texttospeech
 from google.oauth2 import service_account
 import os
+import json
 
-__dirname = os.path.abspath(os.path.dirname(__file__))
-
-credentials = service_account.Credentials.from_service_account_file(
-    os.path.join(__dirname, "credentials.json")
-)
+# get credentials from environment variable
+credentials_json = os.getenv("GOOGLE_APPLICATION_CREDENTIALS_JSON") or "{}"
+# convert to json
+credentials = json.loads(credentials_json)
+credentials = service_account.Credentials.from_service_account_info(credentials)
 
 
 class TextToSpeechClient:
