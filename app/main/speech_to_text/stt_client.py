@@ -25,6 +25,10 @@ class SpeechToTextClient:
             auto_decoding_config=cloud_speech.AutoDetectDecodingConfig(),
             language_codes=["en-US"],
             model="long",
+            features=cloud_speech.RecognitionFeatures(
+                enable_automatic_punctuation=True,
+                enable_word_time_offsets=True,
+            ),
         )
         self.recognizer = f"projects/{project_id}/locations/global/recognizers/_"
 
@@ -42,7 +46,21 @@ class SpeechToTextClient:
         # Transcribes the audio into text
         response = self.client.recognize(request=request)
 
+        speech_data = []
+
         for result in response.results:
-            print(f"Transcript: {result.alternatives[0].transcript}", result)
+            print(f"Transcript: ", result)
+            best_alternative = result.alternatives[0]
+            for word in best_alternative.words:
+                print()
+                speech_data.append(
+                    {
+                        "start": word.start_offset,
+                        "end": word.end_offset,
+                        "word": word.word,
+                    }
+                )
+
+        print(speech_data)
 
         return response
