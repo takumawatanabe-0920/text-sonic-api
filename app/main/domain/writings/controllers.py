@@ -8,7 +8,11 @@ from app.main.domain.writings.dto.request_dto import (
 )
 from app.main.domain.writings.services import WritingService
 
-from .dto.response_dto import StatusResponse, WritingResponse, WritingsResponse
+from app.main.domain.writings.dto.response_dto import (
+    WritingResponse,
+    WritingsResponse,
+)
+from app.main.domain.common.dto.response_dto import StatusResponse
 
 router = APIRouter()
 

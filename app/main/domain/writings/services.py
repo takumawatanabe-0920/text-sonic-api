@@ -12,11 +12,11 @@ from app.main.domain.writings.dto.request_dto import (
     UpdateWritingBodyDto,
 )
 from app.main.domain.writings.dto.response_dto import (
-    StatusResponse,
     WritingDto,
     WritingResponse,
     WritingsResponse,
 )
+from app.main.domain.common.dto.response_dto import StatusResponse
 
 
 class WritingService:
