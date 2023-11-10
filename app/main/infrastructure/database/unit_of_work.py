@@ -2,7 +2,7 @@ from typing import Annotated
 from fastapi import Depends
 from sqlalchemy.orm import Session
 
-from app.main.infrastructure.base import get_db
+from app.main.infrastructure.database.base import get_db
 
 
 class UnitOfWork:

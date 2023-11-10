@@ -15,4 +15,4 @@ async def convert_to_speech(
         WritingToSpeechService, Depends(WritingToSpeechService)
     ],
 ) -> StatusResponse:
-    return await writing_to_speech_service.convert_to_speech(writing_id)
+    return writing_to_speech_service.convert_to_speech(writing_id)

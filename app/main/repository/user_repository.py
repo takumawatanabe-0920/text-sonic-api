@@ -8,9 +8,8 @@ from sqlalchemy import update as __update
 from sqlalchemy.future import select
 
 from app.main.infrastructure.models import User
-from app.main.infrastructure.schemas.user_schema import (UserCreate, UserGet,
-                                                         UserUpdate)
-from app.main.infrastructure.unit_of_work import UnitOfWork
+from app.main.infrastructure.schemas.user_schema import UserCreate, UserGet, UserUpdate
+from app.main.infrastructure.database.unit_of_work import UnitOfWork
 
 
 class UserRepository:
