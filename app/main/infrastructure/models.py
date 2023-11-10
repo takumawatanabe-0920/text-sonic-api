@@ -1,4 +1,6 @@
-from sqlalchemy import Column, DateTime, String, func
+import datetime
+
+from sqlalchemy import Column, DateTime, String
 
 from app.main.infrastructure.base import Base
 
@@ -10,8 +12,8 @@ class User(Base):
     encrypted_password = Column(String)
     email = Column(String, unique=True)
 
-    # created_at = Column(DateTime, default=func.now())
-    # updated_at = Column(DateTime, onupdate=func.now())
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.datetime.utcnow)
 
 
 class Writing(Base):
@@ -21,5 +23,5 @@ class Writing(Base):
     title = Column(String)
     description = Column(String)
 
-    # created_at = Column(DateTime, default=func.now())
-    # updated_at = Column(DateTime, onupdate=func.now())
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.datetime.utcnow)

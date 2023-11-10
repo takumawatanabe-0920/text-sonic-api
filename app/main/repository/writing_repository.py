@@ -1,15 +1,16 @@
 from __future__ import annotations
-from fastapi import Depends
-from sqlalchemy.future import select
-from sqlalchemy import update as __update, delete as __delete
 
-from app.main.infrastructure.schemas.writing_schema import (
-    WritingCreate,
-    WritingUpdate,
-    WritingGet,
-)
+from fastapi import Depends
+from sqlalchemy import delete as __delete
+from sqlalchemy import update as __update
+from sqlalchemy.future import select
 
 from app.main.infrastructure.models import Writing
+from app.main.infrastructure.schemas.writing_schema import (
+    WritingCreate,
+    WritingGet,
+    WritingUpdate,
+)
 from app.main.infrastructure.unit_of_work import UnitOfWork
 
 

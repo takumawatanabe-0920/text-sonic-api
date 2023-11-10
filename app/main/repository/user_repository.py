@@ -1,13 +1,12 @@
 from __future__ import annotations
-from fastapi import Depends
 
+from fastapi import Depends
+from sqlalchemy import delete as __delete
+from sqlalchemy import update as __update
 from sqlalchemy.future import select
 
-from app.main.infrastructure.schemas.user_schema import UserCreate, UserUpdate, UserGet
-
 from app.main.infrastructure.models import User
-from sqlalchemy import update as __update, delete as __delete
-
+from app.main.infrastructure.schemas.user_schema import UserCreate, UserGet, UserUpdate
 from app.main.infrastructure.unit_of_work import UnitOfWork
 
 
