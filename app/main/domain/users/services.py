@@ -7,12 +7,9 @@ from app.main.auth.jwt import get_password_hash
 from app.main.domain.auth.dto.response_dto import LoginResponse
 from app.main.domain.auth.services import AuthService
 from app.main.domain.common.dto.response_dto import StatusResponse
-from app.main.domain.users.dto.request_dto import (CreateUserBodyDto,
-                                                   UpdateUserBodyDto)
-from app.main.domain.users.dto.response_dto import (UserDto, UserResponse,
-                                                    UsersResponse)
-from app.main.infrastructure.schemas.user_schema import (UserCreate, UserGet,
-                                                         UserUpdate)
+from app.main.domain.users.dto.request_dto import CreateUserBodyDto, UpdateUserBodyDto
+from app.main.domain.users.dto.response_dto import UserDto, UserResponse, UsersResponse
+from app.main.infrastructure.schemas.user_schema import UserCreate, UserGet, UserUpdate
 from app.main.repository.user_repository import UserRepository
 
 

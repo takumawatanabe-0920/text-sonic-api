@@ -1,6 +1,7 @@
 from typing import Annotated
 
 from fastapi import APIRouter, Depends
+from app.main.domain.auth.services import AuthService
 
 from app.main.domain.common.dto.response_dto import StatusResponse
 from app.main.domain.writing_to_speech.services import WritingToSpeechService
@@ -14,5 +15,7 @@ async def convert_to_speech(
     writing_to_speech_service: Annotated[
         WritingToSpeechService, Depends(WritingToSpeechService)
     ],
+    auth_service: Annotated[AuthService, Depends(AuthService)],
 ) -> StatusResponse:
+    auth_service.get_current_user()
     return writing_to_speech_service.convert_to_speech(writing_id)

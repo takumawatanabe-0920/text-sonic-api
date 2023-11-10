@@ -9,7 +9,7 @@ from app.main.auth.jwt import (
     verify_password,
 )
 from app.main.domain.auth.dto.response_dto import LoginBase, LoginResponse
-from app.main.domain.users.dto.response_dto import UserDto, UserResponse
+from app.main.domain.users.dto.response_dto import UserDto
 from app.main.infrastructure.schemas.user_schema import UserGet
 from app.main.repository.user_repository import UserRepository
 
@@ -40,7 +40,7 @@ class AuthService:
             message=LoginBase(access_token=access_token, token_type="bearer")
         )
 
-    def get_current_user(self) -> UserResponse:
+    def get_current_user(self) -> UserDto:
         user = decode_access_token(self.__token)
         if not user:
             raise HTTPException(
@@ -53,14 +53,12 @@ class AuthService:
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Invalid authentication credentials",
             )
-        return UserResponse(
-            message=UserDto(
-                id=user.id,
-                email=user.email,
-                encrypted_password=user.encrypted_password,
-                created_at=user.created_at,
-                updated_at=user.updated_at,
-            )
+        return UserDto(
+            id=user.id,
+            email=user.email,
+            encrypted_password=user.encrypted_password,
+            created_at=user.created_at,
+            updated_at=user.updated_at,
         )
 
     def __authenticate_user(

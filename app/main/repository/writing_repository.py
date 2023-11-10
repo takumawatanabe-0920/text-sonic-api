@@ -1,14 +1,16 @@
 from typing import Annotated, Optional
+
+import sqlalchemy as sa
 from fastapi import Depends
 from sqlalchemy.future import select
-import sqlalchemy as sa
+
+from app.main.infrastructure.database.unit_of_work import UnitOfWork
 from app.main.infrastructure.models import Writing
 from app.main.infrastructure.schemas.writing_schema import (
     WritingCreate,
     WritingGet,
     WritingUpdate,
 )
-from app.main.infrastructure.database.unit_of_work import UnitOfWork
 
 
 class WritingRepository:
@@ -44,15 +46,24 @@ class WritingRepository:
     ) -> Optional[WritingGet]:  # noqa: A003
         with self.uow as uow:
             data = writing.dict(exclude_unset=True)
-            uow.db.execute(sa.update(Writing).where(Writing.id == id_).values(**data))
+            uow.db.execute(
+                sa.update(Writing)
+                .where(Writing.id == id_)
+                .where(Writing.user_id == writing.user_id)
+                .values(**data)
+            )
             uow.db.commit()
             updated_writing = self.get_by_id(id_)
 
         return updated_writing
 
-    def delete(self, id_: str) -> None:
+    def delete(self, id_: str, user_id: str) -> None:
         with self.uow as uow:
-            uow.db.execute(sa.delete(Writing).where(Writing.id == id_))
+            uow.db.execute(
+                sa.delete(Writing)
+                .where(Writing.id == id_)
+                .where(Writing.user_id == user_id)
+            )
             uow.db.commit()
 
         return None

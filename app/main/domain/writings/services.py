@@ -42,6 +42,7 @@ class WritingService:
                 id=writing.id,
                 title=writing.title,
                 description=writing.description,
+                user_id=writing.user_id,
                 created_at=writing.created_at,
                 updated_at=writing.updated_at,
             )
@@ -49,7 +50,11 @@ class WritingService:
 
     def create_writing(self, writing: CreateWritingBodyDto) -> WritingResponse:
         created_writing = self.__writing_repository.save(
-            WritingCreate(title=writing.title, description=writing.description)
+            WritingCreate(
+                title=writing.title,
+                description=writing.description,
+                user_id=writing.user_id,
+            )
         )
         if not created_writing:
             raise HTTPException(status_code=404, detail="Writing not found")
@@ -60,7 +65,12 @@ class WritingService:
         self, id_: str, writing: UpdateWritingBodyDto
     ) -> WritingResponse:
         updated_writing = self.__writing_repository.update(
-            id_, WritingUpdate(title=writing.title, description=writing.description)
+            id_,
+            WritingUpdate(
+                title=writing.title,
+                description=writing.description,
+                user_id=writing.user_id,
+            ),
         )
 
         if not updated_writing:
@@ -68,9 +78,9 @@ class WritingService:
 
         return self.get_writing_by_id(id_)
 
-    def delete_writing(self, id_: str) -> StatusResponse:
+    def delete_writing(self, id_: str, user_id: str) -> StatusResponse:
         try:
-            self.__writing_repository.delete(id_)
+            self.__writing_repository.delete(id_, user_id)
             return StatusResponse(message="OK")
         # pylint: disable=broad-exception-caught
         except Exception as e:
@@ -84,6 +94,7 @@ class WritingService:
                     id=writing.id,
                     title=writing.title,
                     description=writing.description,
+                    user_id=writing.user_id,
                     created_at=writing.created_at,
                     updated_at=writing.updated_at,
                 )
