@@ -5,9 +5,8 @@ from fastapi import APIRouter, Depends
 from app.main.domain.auth.dto.response_dto import LoginResponse
 from app.main.domain.auth.services import AuthService
 from app.main.domain.common.dto.response_dto import StatusResponse
-from app.main.domain.users.dto.request_dto import (CreateUserBodyDto,
-                                                   UpdateUserBodyDto)
-from app.main.domain.users.dto.response_dto import UserResponse, UsersResponse
+from app.main.domain.users.dto.request_dto import CreateUserBodyDto, UpdateUserBodyDto
+from app.main.domain.users.dto.response_dto import UserDto, UserResponse, UsersResponse
 from app.main.domain.users.services import UserService
 
 router = APIRouter()
@@ -24,7 +23,7 @@ async def get_users(
 async def get_user_by_id(
     auth_service: Annotated[AuthService, Depends(AuthService)]
 ) -> UserResponse:
-    return auth_service.get_current_user()
+    return UserResponse(message=UserDto(**auth_service.get_current_user().dict()))
 
 
 @router.post("/users", response_model=LoginResponse)
@@ -35,17 +34,20 @@ async def create_user(
     return user_service.create_user(reqBody)
 
 
-@router.put("/users/{id_}", response_model=UserResponse)
+@router.put("/users/me", response_model=UserResponse)
 async def update_user(
-    id_: str,
     reqBody: UpdateUserBodyDto,
     user_service: Annotated[UserService, Depends(UserService)],
+    auth_service: Annotated[AuthService, Depends(AuthService)],
 ) -> UserResponse:
-    return user_service.update_user(id_, reqBody)
+    current_user = auth_service.get_current_user()
+    return user_service.update_user(current_user.id, reqBody)
 
 
-@router.delete("/users/{id_}", response_model=StatusResponse)
+@router.delete("/users/me", response_model=StatusResponse)
 async def delete_user(
-    id_: str, user_service: Annotated[UserService, Depends(UserService)]
+    user_service: Annotated[UserService, Depends(UserService)],
+    auth_service: Annotated[AuthService, Depends(AuthService)],
 ) -> StatusResponse:
-    return user_service.delete_user(id_)
+    current_user = auth_service.get_current_user()
+    return user_service.delete_user(current_user.id)

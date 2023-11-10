@@ -44,15 +44,24 @@ class WritingRepository:
     ) -> Optional[WritingGet]:  # noqa: A003
         with self.uow as uow:
             data = writing.dict(exclude_unset=True)
-            uow.db.execute(sa.update(Writing).where(Writing.id == id_).values(**data))
+            uow.db.execute(
+                sa.update(Writing)
+                .where(Writing.id == id_)
+                .where(Writing.user_id == writing.user_id)
+                .values(**data)
+            )
             uow.db.commit()
             updated_writing = self.get_by_id(id_)
 
         return updated_writing
 
-    def delete(self, id_: str) -> None:
+    def delete(self, id_: str, user_id: str) -> None:
         with self.uow as uow:
-            uow.db.execute(sa.delete(Writing).where(Writing.id == id_))
+            uow.db.execute(
+                sa.delete(Writing)
+                .where(Writing.id == id_)
+                .where(Writing.user_id == user_id)
+            )
             uow.db.commit()
 
         return None
