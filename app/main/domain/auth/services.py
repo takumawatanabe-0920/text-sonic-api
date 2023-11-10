@@ -5,10 +5,10 @@ from fastapi import Depends, HTTPException, status
 from app.main.auth.jwt import (
     create_access_token,
     decode_access_token,
-    verify_password,
     oauth2_scheme,
+    verify_password,
 )
-from app.main.domain.auth.dto.response_dto import LoginResponse, LoginBase
+from app.main.domain.auth.dto.response_dto import LoginBase, LoginResponse
 from app.main.domain.users.dto.response_dto import UserDto, UserResponse
 from app.main.infrastructure.schemas.user_schema import UserGet
 from app.main.repository.user_repository import UserRepository

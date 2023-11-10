@@ -1,15 +1,24 @@
 from fastapi import Depends, HTTPException
+
+from app.core.log.logger import logger
+from app.main.auth.jwt import get_password_hash
+from app.main.domain.auth.dto.response_dto import LoginResponse
+from app.main.domain.auth.services import AuthService
 from app.main.domain.common.dto.response_dto import StatusResponse
+from app.main.domain.users.dto.request_dto import CreateUserBodyDto, UpdateUserBodyDto
 from app.main.domain.users.dto.response_dto import UserDto, UserResponse, UsersResponse
 from app.main.infrastructure.schemas.user_schema import UserCreate, UserGet, UserUpdate
 from app.main.repository.user_repository import UserRepository
-from app.core.log.logger import logger
-from app.main.domain.users.dto.request_dto import CreateUserBodyDto, UpdateUserBodyDto
 
 
 class UserService:
-    def __init__(self, user_repository: UserRepository = Depends(UserRepository)):
+    def __init__(
+        self,
+        user_repository: UserRepository = Depends(UserRepository),
+        auth_service: AuthService = Depends(AuthService),
+    ):
         self.__user_repository = user_repository
+        self.__auth_service = auth_service
 
     async def get_users(self) -> UsersResponse:
         users = await self.__user_repository.get_all()
@@ -30,15 +39,16 @@ class UserService:
             )
         )
 
-    async def create_user(self, user: CreateUserBodyDto) -> UserResponse:
+    async def create_user(self, user: CreateUserBodyDto) -> LoginResponse:
+        encrypted_password = get_password_hash(user.password)
         created_user = await self.__user_repository.save(
-            UserCreate(email=user.email, encrypted_password=user.password)
+            UserCreate(email=user.email, encrypted_password=encrypted_password)
         )
 
         if not created_user:
             raise HTTPException(status_code=404, detail="User not found")
 
-        return await self.get_user(created_user.id)
+        return await self.__auth_service.login(user.email)
 
     async def update_user(self, user_id: str, user: UpdateUserBodyDto) -> UserResponse:
         updated_user = await self.__user_repository.update(

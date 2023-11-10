@@ -3,9 +3,11 @@ from __future__ import annotations
 from prisma.types import WritingUpdateInput
 
 from app.main.infrastructure.prisma_service import prisma
-from app.main.infrastructure.schemas.writing_schema import (WritingCreate,
-                                                            WritingGet,
-                                                            WritingUpdate)
+from app.main.infrastructure.schemas.writing_schema import (
+    WritingCreate,
+    WritingGet,
+    WritingUpdate,
+)
 
 
 class WritingRepository:
