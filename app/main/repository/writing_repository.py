@@ -1,9 +1,7 @@
 from typing import Annotated, Optional
 from fastapi import Depends
-from sqlalchemy import delete as __delete
-from sqlalchemy import update as __update
 from sqlalchemy.future import select
-
+import sqlalchemy as sa
 from app.main.infrastructure.models import Writing
 from app.main.infrastructure.schemas.writing_schema import (
     WritingCreate,
@@ -46,7 +44,7 @@ class WritingRepository:
     ) -> Optional[WritingGet]:  # noqa: A003
         with self.uow as uow:
             data = writing.dict(exclude_unset=True)
-            uow.db.execute(__update(Writing).where(Writing.id == id_).values(**data))
+            uow.db.execute(sa.update(Writing).where(Writing.id == id_).values(**data))
             uow.db.commit()
             updated_writing = self.get_by_id(id_)
 
@@ -54,7 +52,7 @@ class WritingRepository:
 
     def delete(self, id_: str) -> None:
         with self.uow as uow:
-            uow.db.execute(__delete(Writing).where(Writing.id == id_))
+            uow.db.execute(sa.delete(Writing).where(Writing.id == id_))
             uow.db.commit()
 
         return None

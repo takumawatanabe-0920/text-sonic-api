@@ -1,10 +1,8 @@
 from typing import Annotated, Optional
 
 from fastapi import Depends
-from sqlalchemy import delete as __delete
-from sqlalchemy import update as __update
 from sqlalchemy.future import select
-
+import sqlalchemy as sa
 from app.main.infrastructure.models import User
 from app.main.infrastructure.schemas.user_schema import UserCreate, UserGet, UserUpdate
 from app.main.infrastructure.database.unit_of_work import UnitOfWork
@@ -51,7 +49,7 @@ class UserRepository:
     def update(self, id_: str, user: UserUpdate) -> Optional[UserGet]:  # noqa: A003
         with self.uow as uow:
             data = user.dict(exclude_unset=True)
-            uow.db.execute(__update(User).where(User.id == id_).values(**data))
+            uow.db.execute(sa.update(User).where(User.id == id_).values(**data))
             uow.db.commit()
             uow.db.refresh(user)
 
@@ -59,7 +57,7 @@ class UserRepository:
 
     def delete(self, id_: str) -> None:
         with self.uow as uow:
-            uow.db.execute(__delete(User).where(User.id == id_))
+            uow.db.execute(sa.delete(User).where(User.id == id_))
             uow.db.commit()
 
         return None
