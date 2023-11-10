@@ -11,14 +11,14 @@ class UserRepository:
         created_user = await prisma.user.create(
             {
                 "email": user.email,
-                "encryptedPassword": user.encryptedPassword,
+                "encrypted_password": user.encrypted_password,
             }
         )
 
         return UserGet(
             id=created_user.id,
             email=created_user.email,
-            encryptedPassword=created_user.encryptedPassword,
+            encrypted_password=created_user.encrypted_password,
             created_at=created_user.created_at,
             updated_at=created_user.updated_at,
         )
@@ -32,7 +32,21 @@ class UserRepository:
         return UserGet(
             id=user.id,
             email=user.email,
-            encryptedPassword=user.encryptedPassword,
+            encrypted_password=user.encrypted_password,
+            created_at=user.created_at,
+            updated_at=user.updated_at,
+        )
+
+    async def get_by_email(self, email: str) -> UserGet | None:
+        user = await prisma.user.find_unique(where={"email": email})
+
+        if not user:
+            return None
+
+        return UserGet(
+            id=user.id,
+            email=user.email,
+            encrypted_password=user.encrypted_password,
             created_at=user.created_at,
             updated_at=user.updated_at,
         )
@@ -44,7 +58,7 @@ class UserRepository:
             UserGet(
                 id=user.id,
                 email=user.email,
-                encryptedPassword=user.encryptedPassword,
+                encrypted_password=user.encrypted_password,
                 created_at=user.created_at,
                 updated_at=user.updated_at,
             )
@@ -53,10 +67,10 @@ class UserRepository:
 
     async def update(self, id_: str, user: UserUpdate) -> UserGet | None:
         data: UserUpdateInput = {}
-        encryptedPassword = user.encryptedPassword
+        encrypted_password = user.encrypted_password
 
-        if encryptedPassword is not None:
-            data["encryptedPassword"] = encryptedPassword
+        if encrypted_password is not None:
+            data["encrypted_password"] = encrypted_password
 
         updated_user = await prisma.user.update(
             where={"id": id_},
@@ -69,7 +83,7 @@ class UserRepository:
         return UserGet(
             id=updated_user.id,
             email=updated_user.email,
-            encryptedPassword=updated_user.encryptedPassword,
+            encrypted_password=updated_user.encrypted_password,
             created_at=updated_user.created_at,
             updated_at=updated_user.updated_at,
         )

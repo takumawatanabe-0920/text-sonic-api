@@ -4,13 +4,13 @@ from pydantic import BaseModel
 
 
 class UserBase(BaseModel):
-    encryptedPassword: str
+    encrypted_password: str
     email: str
 
 
 class UserGet(BaseModel):
     id: str
-    encryptedPassword: str
+    encrypted_password: str
     email: str
     created_at: datetime
     updated_at: datetime
@@ -24,7 +24,7 @@ class UserCreate(UserBase):
 
 
 class UserUpdate(BaseModel):
-    encryptedPassword: str
+    encrypted_password: str
 
 
 class User(UserBase):

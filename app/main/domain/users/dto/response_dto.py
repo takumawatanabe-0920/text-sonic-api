@@ -6,7 +6,7 @@ from pydantic import BaseModel
 class UserDto(BaseModel):
     id: str
     email: str
-    encryptedPassword: str
+    encrypted_password: str
     created_at: datetime
     updated_at: datetime
 

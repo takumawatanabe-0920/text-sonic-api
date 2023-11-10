@@ -24,7 +24,7 @@ class UserService:
             message=UserDto(
                 id=user.id,
                 email=user.email,
-                encryptedPassword=user.encryptedPassword,
+                encrypted_password=user.encrypted_password,
                 created_at=user.created_at,
                 updated_at=user.updated_at,
             )
@@ -32,7 +32,7 @@ class UserService:
 
     async def create_user(self, user: CreateUserBodyDto) -> UserResponse:
         created_user = await self.__user_repository.save(
-            UserCreate(email=user.email, encryptedPassword=user.password)
+            UserCreate(email=user.email, encrypted_password=user.password)
         )
 
         if not created_user:
@@ -42,7 +42,7 @@ class UserService:
 
     async def update_user(self, user_id: str, user: UpdateUserBodyDto) -> UserResponse:
         updated_user = await self.__user_repository.update(
-            user_id, UserUpdate(encryptedPassword=user.password)
+            user_id, UserUpdate(encrypted_password=user.password)
         )
 
         if not updated_user:
@@ -65,7 +65,7 @@ class UserService:
                 UserDto(
                     id=user.id,
                     email=user.email,
-                    encryptedPassword=user.encryptedPassword,
+                    encrypted_password=user.encrypted_password,
                     created_at=user.created_at,
                     updated_at=user.updated_at,
                 )

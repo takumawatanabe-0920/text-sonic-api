@@ -10,7 +10,7 @@ generator client {
 
 model User {
   id                String  @id @default(cuid())
-  encryptedPassword String
+  encrypted_password String
   email             String @unique
 
   resetTokens       ResetToken[]
