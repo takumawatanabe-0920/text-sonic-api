@@ -1,94 +1,65 @@
 from __future__ import annotations
+from fastapi import Depends
 
-from prisma.types import UserUpdateInput
+from sqlalchemy.future import select
 
-from app.main.infrastructure.prisma_service import prisma
-from app.main.infrastructure.schemas.user_schema import UserCreate, UserGet, UserUpdate
+from app.main.infrastructure.schemas.user_schema import UserCreate, UserUpdate, UserGet
+from app.main.infrastructure.modelts import User
+from sqlalchemy import update as __update, delete as __delete
+
+from app.main.infrastructure.unit_of_work import UnitOfWork
 
 
 class UserRepository:
-    async def save(self, user: UserCreate) -> UserGet | None:
-        created_user = await prisma.user.create(
-            {
-                "email": user.email,
-                "encrypted_password": user.encrypted_password,
-            }
-        )
+    def __init__(self, uow: UnitOfWork = Depends(UnitOfWork)):
+        self.uow = uow
 
-        return UserGet(
-            id=created_user.id,
-            email=created_user.email,
-            encrypted_password=created_user.encrypted_password,
-            created_at=created_user.created_at,
-            updated_at=created_user.updated_at,
-        )
+    def save(self, user: UserCreate) -> UserGet:
+        with self.uow as uow:
+            new_user = User(**user.dict())
+            uow.db.add(new_user)
 
-    async def get_by_id(self, id_: str) -> UserGet | None:
-        user = await prisma.user.find_unique(where={"id": id_})
+        return UserGet.from_orm(new_user)
+
+    def get_by_id(self, id_: str) -> UserGet | None:
+        with self.uow as uow:
+            result = uow.db.execute(select(User).filter(User.id == id_))
+            user = result.scalars().first()
 
         if not user:
             return None
 
-        return UserGet(
-            id=user.id,
-            email=user.email,
-            encrypted_password=user.encrypted_password,
-            created_at=user.created_at,
-            updated_at=user.updated_at,
-        )
+        return UserGet.from_orm(user)
 
-    async def get_by_email(self, email: str) -> UserGet | None:
-        user = await prisma.user.find_unique(where={"email": email})
+    def get_by_email(self, email: str) -> UserGet | None:
+        with self.uow as uow:
+            result = uow.db.execute(select(User).filter(User.email == email))
+            user = result.scalars().first()
 
         if not user:
             return None
 
-        return UserGet(
-            id=user.id,
-            email=user.email,
-            encrypted_password=user.encrypted_password,
-            created_at=user.created_at,
-            updated_at=user.updated_at,
-        )
+        return UserGet.from_orm(user)
 
-    async def get_all(self) -> list[UserGet]:
-        users = await prisma.user.find_many()
+    def get_all(self) -> list[UserGet]:
+        with self.uow as uow:
+            result = uow.db.execute(select(User))
+            users = result.scalars().all()
 
-        return [
-            UserGet(
-                id=user.id,
-                email=user.email,
-                encrypted_password=user.encrypted_password,
-                created_at=user.created_at,
-                updated_at=user.updated_at,
-            )
-            for user in users
-        ]
+        return [UserGet.from_orm(user) for user in users]
 
-    async def update(self, id_: str, user: UserUpdate) -> UserGet | None:
-        data: UserUpdateInput = {}
-        encrypted_password = user.encrypted_password
+    def update(self, id_: str, user: UserUpdate) -> UserGet | None:
+        with self.uow as uow:
+            data = user.dict(exclude_unset=True)
+            uow.db.execute(__update(User).where(User.id == id_).values(**data))
+            uow.db.commit()
+            uow.db.refresh(user)
 
-        if encrypted_password is not None:
-            data["encrypted_password"] = encrypted_password
+        return self.get_by_id(id_)
 
-        updated_user = await prisma.user.update(
-            where={"id": id_},
-            data=data,
-        )
-
-        if not updated_user:
-            return None
-
-        return UserGet(
-            id=updated_user.id,
-            email=updated_user.email,
-            encrypted_password=updated_user.encrypted_password,
-            created_at=updated_user.created_at,
-            updated_at=updated_user.updated_at,
-        )
-
-    async def delete(self, id_: str) -> None:
-        await prisma.user.delete(where={"id": id_})
+    def delete(self, id_: str) -> None:
+        with self.uow as uow:
+            uow.db.execute(__delete(User).where(User.id == id_))
+            uow.db.commit()
 
         return None

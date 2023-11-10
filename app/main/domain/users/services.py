@@ -21,11 +21,11 @@ class UserService:
         self.__auth_service = auth_service
 
     async def get_users(self) -> UsersResponse:
-        users = await self.__user_repository.get_all()
+        users = self.__user_repository.get_all()
         return self.__convert_list_response(users)
 
     async def get_user(self, user_id: str) -> UserResponse:
-        user = await self.__user_repository.get_by_id(user_id)
+        user = self.__user_repository.get_by_id(user_id)
         if not user:
             raise HTTPException(status_code=404, detail="User not found")
 
@@ -41,7 +41,7 @@ class UserService:
 
     async def create_user(self, user: CreateUserBodyDto) -> LoginResponse:
         encrypted_password = get_password_hash(user.password)
-        created_user = await self.__user_repository.save(
+        created_user = self.__user_repository.save(
             UserCreate(email=user.email, encrypted_password=encrypted_password)
         )
 
@@ -51,7 +51,7 @@ class UserService:
         return await self.__auth_service.login(user.email)
 
     async def update_user(self, user_id: str, user: UpdateUserBodyDto) -> UserResponse:
-        updated_user = await self.__user_repository.update(
+        updated_user = self.__user_repository.update(
             user_id, UserUpdate(encrypted_password=user.password)
         )
 
@@ -62,7 +62,7 @@ class UserService:
 
     async def delete_user(self, user_id: str) -> StatusResponse:
         try:
-            await self.__user_repository.delete(user_id)
+            self.__user_repository.delete(user_id)
             return StatusResponse(message="OK")
         # pylint: disable=broad-exception-caught
         except Exception as e:
