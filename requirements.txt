@@ -12,3 +12,5 @@ prisma
 pylint
 google-cloud-texttospeech
 google-cloud-speech
+python-jose[cryptography]
+passlib[bcrypt]
