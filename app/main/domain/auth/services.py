@@ -9,7 +9,7 @@ from app.main.auth.jwt import (
     verify_password,
 )
 from app.main.domain.auth.dto.response_dto import LoginBase, LoginResponse
-from app.main.domain.users.dto.response_dto import UserDto, UserResponse
+from app.main.domain.users.dto.response_dto import UserDto
 from app.main.infrastructure.schemas.user_schema import UserGet
 from app.main.repository.user_repository import UserRepository
 

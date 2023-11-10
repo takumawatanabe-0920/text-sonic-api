@@ -1,9 +1,8 @@
-from locale import currency
 from typing import Annotated
 
 from fastapi import APIRouter, Depends
-from app.main.domain.auth.services import AuthService
 
+from app.main.domain.auth.services import AuthService
 from app.main.domain.common.dto.response_dto import StatusResponse
 from app.main.domain.writings.dto.request_dto import (
     CreateWritingBodyDto,

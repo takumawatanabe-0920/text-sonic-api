@@ -2,8 +2,7 @@ from typing import Annotated
 
 from fastapi import Depends
 
-from app.main.domain.speech_to_text.dto.response_dto import \
-    SpeechToTextResponseDto
+from app.main.domain.speech_to_text.dto.response_dto import SpeechToTextResponseDto
 from app.main.speech_to_text.stt_client import SpeechToTextClient
 
 

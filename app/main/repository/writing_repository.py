@@ -1,14 +1,16 @@
 from typing import Annotated, Optional
+
+import sqlalchemy as sa
 from fastapi import Depends
 from sqlalchemy.future import select
-import sqlalchemy as sa
+
+from app.main.infrastructure.database.unit_of_work import UnitOfWork
 from app.main.infrastructure.models import Writing
 from app.main.infrastructure.schemas.writing_schema import (
     WritingCreate,
     WritingGet,
     WritingUpdate,
 )
-from app.main.infrastructure.database.unit_of_work import UnitOfWork
 
 
 class WritingRepository:
