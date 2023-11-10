@@ -4,7 +4,8 @@ from fastapi import Depends
 from sqlalchemy.future import select
 
 from app.main.infrastructure.schemas.user_schema import UserCreate, UserUpdate, UserGet
-from app.main.infrastructure.modelts import User
+
+from app.main.infrastructure.models import User
 from sqlalchemy import update as __update, delete as __delete
 
 from app.main.infrastructure.unit_of_work import UnitOfWork
