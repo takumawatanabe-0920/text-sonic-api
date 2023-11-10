@@ -15,4 +15,4 @@ async def convert_to_text(
         SpeechToTextService, Depends(SpeechToTextService)
     ],
 ) -> SpeechToTextResponseDto:
-    return await speech_to_text_service.convert_to_text(writing_id)
+    return speech_to_text_service.convert_to_text(writing_id)

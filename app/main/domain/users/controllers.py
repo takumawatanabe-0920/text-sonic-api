@@ -16,14 +16,14 @@ router = APIRouter()
 async def get_users(
     user_service: Annotated[UserService, Depends(UserService)]
 ) -> UsersResponse:
-    return await user_service.get_users()
+    return user_service.get_users()
 
 
 @router.get("/users/me", response_model=UserResponse)
 async def get_user_by_id(
     auth_service: Annotated[AuthService, Depends(AuthService)]
 ) -> UserResponse:
-    return await auth_service.get_current_user()
+    return auth_service.get_current_user()
 
 
 @router.post("/users", response_model=LoginResponse)
@@ -31,7 +31,7 @@ async def create_user(
     reqBody: CreateUserBodyDto,
     user_service: Annotated[UserService, Depends(UserService)],
 ) -> LoginResponse:
-    return await user_service.create_user(reqBody)
+    return user_service.create_user(reqBody)
 
 
 @router.put("/users/{id_}", response_model=UserResponse)
@@ -40,11 +40,11 @@ async def update_user(
     reqBody: UpdateUserBodyDto,
     user_service: Annotated[UserService, Depends(UserService)],
 ) -> UserResponse:
-    return await user_service.update_user(id_, reqBody)
+    return user_service.update_user(id_, reqBody)
 
 
 @router.delete("/users/{id_}", response_model=StatusResponse)
 async def delete_user(
     id_: str, user_service: Annotated[UserService, Depends(UserService)]
 ) -> StatusResponse:
-    return await user_service.delete_user(id_)
+    return user_service.delete_user(id_)

@@ -13,4 +13,4 @@ router = APIRouter()
 async def login(
     reqBody: LoginBodyDto, auth_service: Annotated[AuthService, Depends(AuthService)]
 ) -> LoginResponse:
-    return await auth_service.login(reqBody.email)
+    return auth_service.login(reqBody.email)

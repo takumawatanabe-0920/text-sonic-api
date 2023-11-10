@@ -20,11 +20,11 @@ class UserService:
         self.__user_repository = user_repository
         self.__auth_service = auth_service
 
-    async def get_users(self) -> UsersResponse:
+    def get_users(self) -> UsersResponse:
         users = self.__user_repository.get_all()
         return self.__convert_list_response(users)
 
-    async def get_user(self, user_id: str) -> UserResponse:
+    def get_user(self, user_id: str) -> UserResponse:
         user = self.__user_repository.get_by_id(user_id)
         if not user:
             raise HTTPException(status_code=404, detail="User not found")
@@ -39,7 +39,7 @@ class UserService:
             )
         )
 
-    async def create_user(self, user: CreateUserBodyDto) -> LoginResponse:
+    def create_user(self, user: CreateUserBodyDto) -> LoginResponse:
         encrypted_password = get_password_hash(user.password)
         created_user = self.__user_repository.save(
             UserCreate(email=user.email, encrypted_password=encrypted_password)
@@ -48,9 +48,9 @@ class UserService:
         if not created_user:
             raise HTTPException(status_code=404, detail="User not found")
 
-        return await self.__auth_service.login(user.email)
+        return self.__auth_service.login(user.email)
 
-    async def update_user(self, user_id: str, user: UpdateUserBodyDto) -> UserResponse:
+    def update_user(self, user_id: str, user: UpdateUserBodyDto) -> UserResponse:
         updated_user = self.__user_repository.update(
             user_id, UserUpdate(encrypted_password=user.password)
         )
@@ -58,9 +58,9 @@ class UserService:
         if not updated_user:
             raise HTTPException(status_code=404, detail="User not found")
 
-        return await self.get_user(user_id)
+        return self.get_user(user_id)
 
-    async def delete_user(self, user_id: str) -> StatusResponse:
+    def delete_user(self, user_id: str) -> StatusResponse:
         try:
             self.__user_repository.delete(user_id)
             return StatusResponse(message="OK")
