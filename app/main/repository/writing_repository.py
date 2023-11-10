@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import Annotated
 
 from fastapi import Depends
 from sqlalchemy import delete as __delete
@@ -15,7 +16,7 @@ from app.main.infrastructure.unit_of_work import UnitOfWork
 
 
 class WritingRepository:
-    def __init__(self, uow: UnitOfWork = Depends(UnitOfWork)):
+    def __init__(self, uow: Annotated[UnitOfWork, Depends(UnitOfWork)]):
         self.uow = uow
 
     def save(self, writing: WritingCreate) -> WritingGet:

@@ -1,3 +1,4 @@
+from typing import Annotated
 from fastapi import Depends, HTTPException
 
 from app.core.log.logger import logger
@@ -14,8 +15,8 @@ from app.main.repository.user_repository import UserRepository
 class UserService:
     def __init__(
         self,
-        user_repository: UserRepository = Depends(UserRepository),
-        auth_service: AuthService = Depends(AuthService),
+        user_repository: Annotated[UserRepository, Depends(UserRepository)],
+        auth_service: Annotated[AuthService, Depends(AuthService)],
     ):
         self.__user_repository = user_repository
         self.__auth_service = auth_service

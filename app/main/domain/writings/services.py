@@ -1,3 +1,4 @@
+from typing import Annotated
 from fastapi import Depends, HTTPException
 
 from app.core.log.logger import logger
@@ -22,7 +23,7 @@ from app.main.repository.writing_repository import WritingRepository
 class WritingService:
     def __init__(
         self,
-        writing_repository: WritingRepository = Depends(WritingRepository),
+        writing_repository: Annotated[WritingRepository, Depends(WritingRepository)],
     ):
         self.__writing_repository = writing_repository
 

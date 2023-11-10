@@ -1,5 +1,5 @@
 from fastapi import Depends
-
+from typing import Annotated
 from app.main.domain.speech_to_text.dto.response_dto import SpeechToTextResponseDto
 from app.main.speech_to_text.stt_client import SpeechToTextClient
 
@@ -7,7 +7,9 @@ from app.main.speech_to_text.stt_client import SpeechToTextClient
 class SpeechToTextService:
     def __init__(
         self,
-        text_to_speech_client: SpeechToTextClient = Depends(SpeechToTextClient),
+        text_to_speech_client: Annotated[
+            SpeechToTextClient, Depends(SpeechToTextClient)
+        ],
     ):
         self.text_to_speech_client = text_to_speech_client
 
