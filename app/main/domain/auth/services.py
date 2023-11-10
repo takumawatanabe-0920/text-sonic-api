@@ -1,13 +1,11 @@
 from __future__ import annotations
+
 from typing import Annotated
+
 from fastapi import Depends, HTTPException, status
 
-from app.main.auth.jwt import (
-    create_access_token,
-    decode_access_token,
-    oauth2_scheme,
-    verify_password,
-)
+from app.main.auth.jwt import (create_access_token, decode_access_token,
+                               oauth2_scheme, verify_password)
 from app.main.domain.auth.dto.response_dto import LoginBase, LoginResponse
 from app.main.domain.users.dto.response_dto import UserDto, UserResponse
 from app.main.infrastructure.schemas.user_schema import UserGet

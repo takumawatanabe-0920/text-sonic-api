@@ -5,7 +5,8 @@ from fastapi import APIRouter, Depends
 from app.main.domain.auth.dto.response_dto import LoginResponse
 from app.main.domain.auth.services import AuthService
 from app.main.domain.common.dto.response_dto import StatusResponse
-from app.main.domain.users.dto.request_dto import CreateUserBodyDto, UpdateUserBodyDto
+from app.main.domain.users.dto.request_dto import (CreateUserBodyDto,
+                                                   UpdateUserBodyDto)
 from app.main.domain.users.dto.response_dto import UserResponse, UsersResponse
 from app.main.domain.users.services import UserService
 

@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 from typing import Annotated
 
 from fastapi import Depends
@@ -7,7 +8,8 @@ from sqlalchemy import update as __update
 from sqlalchemy.future import select
 
 from app.main.infrastructure.models import User
-from app.main.infrastructure.schemas.user_schema import UserCreate, UserGet, UserUpdate
+from app.main.infrastructure.schemas.user_schema import (UserCreate, UserGet,
+                                                         UserUpdate)
 from app.main.infrastructure.unit_of_work import UnitOfWork
 
 

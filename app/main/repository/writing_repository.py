@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 from typing import Annotated
 
 from fastapi import Depends
@@ -7,11 +8,9 @@ from sqlalchemy import update as __update
 from sqlalchemy.future import select
 
 from app.main.infrastructure.models import Writing
-from app.main.infrastructure.schemas.writing_schema import (
-    WritingCreate,
-    WritingGet,
-    WritingUpdate,
-)
+from app.main.infrastructure.schemas.writing_schema import (WritingCreate,
+                                                            WritingGet,
+                                                            WritingUpdate)
 from app.main.infrastructure.unit_of_work import UnitOfWork
 
 
