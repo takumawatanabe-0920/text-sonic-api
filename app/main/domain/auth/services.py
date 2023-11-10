@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from fastapi import Depends, HTTPException, status
 
 from app.main.auth.jwt import (
@@ -7,7 +9,8 @@ from app.main.auth.jwt import (
     oauth2_scheme,
 )
 from app.main.domain.auth.dto.response_dto import LoginResponse, LoginBase
-from app.main.infrastructure.schemas.user_schema import User, UserGet
+from app.main.domain.users.dto.response_dto import UserDto, UserResponse
+from app.main.infrastructure.schemas.user_schema import UserGet
 from app.main.repository.user_repository import UserRepository
 
 
@@ -32,7 +35,9 @@ class AuthService:
             message=LoginBase(access_token=access_token, token_type="bearer")
         )
 
-    async def get_current_user(self, token: str = Depends(oauth2_scheme)):
+    async def get_current_user(
+        self, token: str = Depends(oauth2_scheme)
+    ) -> UserResponse:
         user = decode_access_token(token)
         if not user:
             raise HTTPException(
@@ -45,7 +50,15 @@ class AuthService:
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Invalid authentication credentials",
             )
-        return user
+        return UserResponse(
+            message=UserDto(
+                id=user.id,
+                email=user.email,
+                encrypted_password=user.encrypted_password,
+                created_at=user.created_at,
+                updated_at=user.updated_at,
+            )
+        )
 
     async def __authenticate_user(self, email: str, password: str) -> UserGet | None:
         user = await self.__user_repository.get_by_email(email)

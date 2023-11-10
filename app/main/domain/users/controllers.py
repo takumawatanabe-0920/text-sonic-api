@@ -1,6 +1,7 @@
 from typing import Annotated
 
 from fastapi import APIRouter, Depends
+from app.main.domain.auth.services import AuthService
 
 from app.main.domain.common.dto.response_dto import StatusResponse
 from app.main.domain.users.dto.request_dto import CreateUserBodyDto, UpdateUserBodyDto
@@ -17,11 +18,11 @@ async def get_users(
     return await user_service.get_users()
 
 
-@router.get("/users/{id_}", response_model=UserResponse)
+@router.get("/users/me", response_model=UserResponse)
 async def get_user_by_id(
-    id_: str, user_service: Annotated[UserService, Depends(UserService)]
+    auth_service: Annotated[AuthService, Depends(AuthService)]
 ) -> UserResponse:
-    return await user_service.get_user(id_)
+    return await auth_service.get_current_user()
 
 
 @router.post("/users", response_model=UserResponse)
