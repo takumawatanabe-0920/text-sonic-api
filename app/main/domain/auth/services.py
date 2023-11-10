@@ -1,4 +1,4 @@
-from __future__ import annotations
+from typing import Annotated, Optional
 
 from fastapi import Depends, HTTPException, status
 
@@ -15,14 +15,19 @@ from app.main.repository.user_repository import UserRepository
 
 
 class AuthService:
-    def __init__(self, user_repository: UserRepository = Depends(UserRepository)):
+    def __init__(
+        self,
+        user_repository: Annotated[UserRepository, Depends(UserRepository)],
+        token: Annotated[str, Depends(oauth2_scheme)],
+    ):
         self.__user_repository = user_repository
+        self.__token = token
 
-    async def login(self, email: str) -> LoginResponse:
-        user = await self.__user_repository.get_by_email(email)
+    def login(self, email: str) -> LoginResponse:
+        user = self.__user_repository.get_by_email(email)
         if not user:
             raise HTTPException(status_code=404, detail="User not found")
-        user = await self.__authenticate_user(user.email, user.encrypted_password)
+        user = self.__authenticate_user(user.email, user.encrypted_password)
         if not user:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
@@ -35,16 +40,14 @@ class AuthService:
             message=LoginBase(access_token=access_token, token_type="bearer")
         )
 
-    async def get_current_user(
-        self, token: str = Depends(oauth2_scheme)
-    ) -> UserResponse:
-        user = decode_access_token(token)
+    def get_current_user(self) -> UserResponse:
+        user = decode_access_token(self.__token)
         if not user:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Invalid authentication credentials",
             )
-        user = await self.__user_repository.get_by_email(user["email"])
+        user = self.__user_repository.get_by_email(user["email"])
         if not user:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
@@ -60,8 +63,10 @@ class AuthService:
             )
         )
 
-    async def __authenticate_user(self, email: str, password: str) -> UserGet | None:
-        user = await self.__user_repository.get_by_email(email)
+    def __authenticate_user(
+        self, email: str, password: str
+    ) -> Optional[UserGet]:  # noqa: A003
+        user = self.__user_repository.get_by_email(email)
         if not user:
             return None
         if not verify_password(password, user.encrypted_password):

@@ -1,3 +1,5 @@
+from typing import Annotated
+
 from fastapi import Depends, HTTPException
 
 from app.core.log.logger import logger
@@ -22,16 +24,16 @@ from app.main.repository.writing_repository import WritingRepository
 class WritingService:
     def __init__(
         self,
-        writing_repository: WritingRepository = Depends(WritingRepository),
+        writing_repository: Annotated[WritingRepository, Depends(WritingRepository)],
     ):
         self.__writing_repository = writing_repository
 
-    async def get_writings(self) -> WritingsResponse:
-        writings = await self.__writing_repository.get_all()
+    def get_writings(self) -> WritingsResponse:
+        writings = self.__writing_repository.get_all()
         return self.__convert_list_response(writings)
 
-    async def get_writing_by_id(self, id_: str) -> WritingResponse:
-        writing = await self.__writing_repository.get_by_id(id_)
+    def get_writing_by_id(self, id_: str) -> WritingResponse:
+        writing = self.__writing_repository.get_by_id(id_)
         if not writing:
             raise HTTPException(status_code=404, detail="Writing not found")
 
@@ -45,30 +47,30 @@ class WritingService:
             )
         )
 
-    async def create_writing(self, writing: CreateWritingBodyDto) -> WritingResponse:
-        created_writing = await self.__writing_repository.save(
+    def create_writing(self, writing: CreateWritingBodyDto) -> WritingResponse:
+        created_writing = self.__writing_repository.save(
             WritingCreate(title=writing.title, description=writing.description)
         )
         if not created_writing:
             raise HTTPException(status_code=404, detail="Writing not found")
 
-        return await self.get_writing_by_id(created_writing.id)
+        return self.get_writing_by_id(created_writing.id)
 
-    async def update_writing(
+    def update_writing(
         self, id_: str, writing: UpdateWritingBodyDto
     ) -> WritingResponse:
-        updated_writing = await self.__writing_repository.update(
+        updated_writing = self.__writing_repository.update(
             id_, WritingUpdate(title=writing.title, description=writing.description)
         )
 
         if not updated_writing:
             raise HTTPException(status_code=404, detail="Writing not found")
 
-        return await self.get_writing_by_id(id_)
+        return self.get_writing_by_id(id_)
 
-    async def delete_writing(self, id_: str) -> StatusResponse:
+    def delete_writing(self, id_: str) -> StatusResponse:
         try:
-            await self.__writing_repository.delete(id_)
+            self.__writing_repository.delete(id_)
             return StatusResponse(message="OK")
         # pylint: disable=broad-exception-caught
         except Exception as e:

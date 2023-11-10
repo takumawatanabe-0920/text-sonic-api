@@ -8,9 +8,12 @@ from app.main.domain.writing_to_speech.controllers import (
     router as writing_to_text_router,
 )
 from app.main.domain.writings.controllers import router as writing_router
-from app.main.infrastructure.prisma_service import prisma
 
-from .middlware.log_middleware import LogMiddleware
+from app.main.middlware.log_middleware import LogMiddleware
+from app.main.infrastructure.database.base import engine
+from app.main.infrastructure import models
+
+models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 app.add_middleware(LogMiddleware)
@@ -31,13 +34,3 @@ app.include_router(writing_to_text_router)
 app.include_router(speech_to_text_router)
 app.include_router(user_router)
 app.include_router(auth_router)
-
-
-@app.on_event("startup")
-async def startup():
-    await prisma.connect()
-
-
-@app.on_event("shutdown")
-async def shutdown():
-    await prisma.disconnect()

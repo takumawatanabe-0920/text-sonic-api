@@ -8,7 +8,7 @@ python-dotenv
 cryptography
 PyYAML>=6.0
 colorlog
-prisma
+sqlalchemy
 pylint
 google-cloud-texttospeech
 google-cloud-speech

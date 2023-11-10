@@ -2,7 +2,8 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends
 
-from app.main.domain.speech_to_text.dto.response_dto import SpeechToTextResponseDto
+from app.main.domain.speech_to_text.dto.response_dto import \
+    SpeechToTextResponseDto
 from app.main.domain.speech_to_text.services import SpeechToTextService
 
 router = APIRouter()
@@ -15,4 +16,4 @@ async def convert_to_text(
         SpeechToTextService, Depends(SpeechToTextService)
     ],
 ) -> SpeechToTextResponseDto:
-    return await speech_to_text_service.convert_to_text(writing_id)
+    return speech_to_text_service.convert_to_text(writing_id)
