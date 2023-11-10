@@ -4,8 +4,12 @@ from typing import Annotated
 
 from fastapi import Depends, HTTPException, status
 
-from app.main.auth.jwt import (create_access_token, decode_access_token,
-                               oauth2_scheme, verify_password)
+from app.main.auth.jwt import (
+    create_access_token,
+    decode_access_token,
+    oauth2_scheme,
+    verify_password,
+)
 from app.main.domain.auth.dto.response_dto import LoginBase, LoginResponse
 from app.main.domain.users.dto.response_dto import UserDto, UserResponse
 from app.main.infrastructure.schemas.user_schema import UserGet
@@ -14,9 +18,12 @@ from app.main.repository.user_repository import UserRepository
 
 class AuthService:
     def __init__(
-        self, user_repository: Annotated[UserRepository, Depends(UserRepository)]
+        self,
+        user_repository: Annotated[UserRepository, Depends(UserRepository)],
+        token: Annotated[str, Depends(oauth2_scheme)],
     ):
         self.__user_repository = user_repository
+        self.__token = token
 
     def login(self, email: str) -> LoginResponse:
         user = self.__user_repository.get_by_email(email)
@@ -35,8 +42,8 @@ class AuthService:
             message=LoginBase(access_token=access_token, token_type="bearer")
         )
 
-    def get_current_user(self, token: str = Depends(oauth2_scheme)) -> UserResponse:
-        user = decode_access_token(token)
+    def get_current_user(self) -> UserResponse:
+        user = decode_access_token(self.__token)
         if not user:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
