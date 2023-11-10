@@ -1,6 +1,4 @@
-from __future__ import annotations
-
-from typing import Annotated
+from typing import Annotated, Optional
 
 from fastapi import Depends
 from sqlalchemy import delete as __delete
@@ -23,7 +21,7 @@ class UserRepository:
 
         return UserGet.from_orm(new_user)
 
-    def get_by_id(self, id_: str) -> UserGet | None:
+    def get_by_id(self, id_: str) -> Optional[UserGet]:  # noqa: A003
         with self.uow as uow:
             result = uow.db.execute(select(User).filter(User.id == id_))
             user = result.scalars().first()
@@ -33,7 +31,7 @@ class UserRepository:
 
         return UserGet.from_orm(user)
 
-    def get_by_email(self, email: str) -> UserGet | None:
+    def get_by_email(self, email: str) -> Optional[UserGet]:  # noqa: A003
         with self.uow as uow:
             result = uow.db.execute(select(User).filter(User.email == email))
             user = result.scalars().first()
@@ -50,7 +48,7 @@ class UserRepository:
 
         return [UserGet.from_orm(user) for user in users]
 
-    def update(self, id_: str, user: UserUpdate) -> UserGet | None:
+    def update(self, id_: str, user: UserUpdate) -> Optional[UserGet]:  # noqa: A003
         with self.uow as uow:
             data = user.dict(exclude_unset=True)
             uow.db.execute(__update(User).where(User.id == id_).values(**data))

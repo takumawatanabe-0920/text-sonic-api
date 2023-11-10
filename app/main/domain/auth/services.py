@@ -1,6 +1,4 @@
-from __future__ import annotations
-
-from typing import Annotated
+from typing import Annotated, Optional
 
 from fastapi import Depends, HTTPException, status
 
@@ -65,7 +63,9 @@ class AuthService:
             )
         )
 
-    def __authenticate_user(self, email: str, password: str) -> UserGet | None:
+    def __authenticate_user(
+        self, email: str, password: str
+    ) -> Optional[UserGet]:  # noqa: A003
         user = self.__user_repository.get_by_email(email)
         if not user:
             return None

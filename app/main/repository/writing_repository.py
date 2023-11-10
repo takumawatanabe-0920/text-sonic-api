@@ -1,17 +1,16 @@
-from __future__ import annotations
-
-from typing import Annotated
-
+from typing import Annotated, Optional
 from fastapi import Depends
 from sqlalchemy import delete as __delete
 from sqlalchemy import update as __update
 from sqlalchemy.future import select
 
 from app.main.infrastructure.models import Writing
-from app.main.infrastructure.schemas.writing_schema import (WritingCreate,
-                                                            WritingGet,
-                                                            WritingUpdate)
-from app.main.infrastructure.unit_of_work import UnitOfWork
+from app.main.infrastructure.schemas.writing_schema import (
+    WritingCreate,
+    WritingGet,
+    WritingUpdate,
+)
+from app.main.infrastructure.database.unit_of_work import UnitOfWork
 
 
 class WritingRepository:
@@ -25,7 +24,7 @@ class WritingRepository:
 
         return WritingGet.from_orm(new_writing)
 
-    def get_by_id(self, id_: str) -> WritingGet | None:
+    def get_by_id(self, id_: str) -> Optional[WritingGet]:  # noqa: A003
         with self.uow as uow:
             result = uow.db.execute(select(Writing).filter(Writing.id == id_))
             writing = result.scalars().first()
@@ -42,7 +41,9 @@ class WritingRepository:
 
         return [WritingGet.from_orm(writing) for writing in writings]
 
-    def update(self, id_: str, writing: WritingUpdate) -> WritingGet | None:
+    def update(
+        self, id_: str, writing: WritingUpdate
+    ) -> Optional[WritingGet]:  # noqa: A003
         with self.uow as uow:
             data = writing.dict(exclude_unset=True)
             uow.db.execute(__update(Writing).where(Writing.id == id_).values(**data))

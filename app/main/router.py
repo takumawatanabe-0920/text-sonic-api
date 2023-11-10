@@ -9,7 +9,7 @@ from app.main.domain.writing_to_speech.controllers import (
 )
 from app.main.domain.writings.controllers import router as writing_router
 
-from .middlware.log_middleware import LogMiddleware
+from app.main.middlware.log_middleware import LogMiddleware
 from app.main.infrastructure.database.base import engine
 from app.main.infrastructure import models
 

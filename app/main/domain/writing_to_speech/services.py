@@ -19,7 +19,7 @@ class WritingToSpeechService:
         self.writing_service = writing_service
         self.text_to_speech_client = text_to_speech_client
 
-    async def convert_to_speech(self, writing_id: str) -> StatusResponse:
+    def convert_to_speech(self, writing_id: str) -> StatusResponse:
         try:
             writing = self.writing_service.get_writing_by_id(writing_id)
 
