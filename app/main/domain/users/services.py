@@ -43,6 +43,9 @@ class UserService:
 
     def create_user(self, user: CreateUserBodyDto) -> LoginResponse:
         encrypted_password = get_password_hash(user.password)
+        db_user = self.__user_repository.get_by_email(user.email)
+        if db_user:
+            raise HTTPException(status_code=400, detail="Email already registered")
         created_user = self.__user_repository.save(
             UserCreate(email=user.email, encrypted_password=encrypted_password)
         )

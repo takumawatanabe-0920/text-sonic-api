@@ -5,7 +5,6 @@ from fastapi import Depends, HTTPException, status
 from app.main.auth.jwt import (
     create_access_token,
     decode_access_token,
-    oauth2_scheme,
     verify_password,
 )
 from app.main.domain.auth.dto.response_dto import LoginBase, LoginResponse
@@ -18,16 +17,15 @@ class AuthService:
     def __init__(
         self,
         user_repository: Annotated[UserRepository, Depends(UserRepository)],
-        token: Annotated[str, Depends(oauth2_scheme)],
     ):
         self.__user_repository = user_repository
-        self.__token = token
 
     def login(self, email: str) -> LoginResponse:
         user = self.__user_repository.get_by_email(email)
         if not user:
             raise HTTPException(status_code=404, detail="User not found")
         user = self.__authenticate_user(user.email, user.encrypted_password)
+        print(user, "user", email, "email")
         if not user:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
@@ -40,8 +38,8 @@ class AuthService:
             message=LoginBase(access_token=access_token, token_type="bearer")
         )
 
-    def get_current_user(self) -> UserDto:
-        user = decode_access_token(self.__token)
+    def get_current_user(self, __token: str) -> UserDto:
+        user = decode_access_token(__token)
         if not user:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,

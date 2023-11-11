@@ -10,6 +10,7 @@ from app.main.domain.writings.dto.request_dto import (
 )
 from app.main.domain.writings.dto.response_dto import WritingResponse, WritingsResponse
 from app.main.domain.writings.services import WritingService
+from app.main.auth.jwt import oauth2_scheme
 
 router = APIRouter()
 
@@ -33,8 +34,9 @@ async def create_writing(
     reqBody: CreateWritingBodyDto,
     writing_service: Annotated[WritingService, Depends(WritingService)],
     auth_service: Annotated[AuthService, Depends(AuthService)],
+    __token: Annotated[str, Depends(oauth2_scheme)],
 ) -> WritingResponse:
-    current_user = auth_service.get_current_user()
+    current_user = auth_service.get_current_user(__token)
     return writing_service.create_writing(
         CreateWritingBodyDto(**reqBody.dict(), user_id=current_user.id)
     )
@@ -46,8 +48,9 @@ async def update_writing(
     reqBody: UpdateWritingBodyDto,
     writing_service: Annotated[WritingService, Depends(WritingService)],
     auth_service: Annotated[AuthService, Depends(AuthService)],
+    __token: Annotated[str, Depends(oauth2_scheme)],
 ) -> WritingResponse:
-    current_user = auth_service.get_current_user()
+    current_user = auth_service.get_current_user(__token)
     return writing_service.update_writing(
         id_,
         UpdateWritingBodyDto(**reqBody.dict(), user_id=current_user.id),
@@ -59,6 +62,7 @@ async def delete_writing(
     id_: str,
     writing_service: Annotated[WritingService, Depends(WritingService)],
     auth_service: Annotated[AuthService, Depends(AuthService)],
+    __token: Annotated[str, Depends(oauth2_scheme)],
 ) -> StatusResponse:
-    current_user = auth_service.get_current_user()
+    current_user = auth_service.get_current_user(__token)
     return writing_service.delete_writing(id_, current_user.id)
