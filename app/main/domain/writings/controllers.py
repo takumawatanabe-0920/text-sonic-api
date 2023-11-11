@@ -7,6 +7,7 @@ from app.main.domain.common.dto.response_dto import StatusResponse
 from app.main.domain.writings.dto.request_dto import (
     CreateWritingBodyDto,
     UpdateWritingBodyDto,
+    WritingQueryDto,
 )
 from app.main.domain.writings.dto.response_dto import WritingResponse, WritingsResponse
 from app.main.domain.writings.services import WritingService
@@ -17,9 +18,10 @@ router = APIRouter()
 
 @router.get("/writings", response_model=WritingsResponse)
 async def get_writings(
-    writing_service: Annotated[WritingService, Depends(WritingService)]
+    user_id: str,
+    writing_service: Annotated[WritingService, Depends(WritingService)],
 ) -> WritingsResponse:
-    return writing_service.get_writings()
+    return writing_service.get_writings(user_id)
 
 
 @router.get("/writings/{id_}", response_model=WritingResponse)

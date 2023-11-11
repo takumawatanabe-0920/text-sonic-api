@@ -9,6 +9,10 @@ class WritingBodyDto(BaseModel):
     user_id: Optional[str] = None
 
 
+class WritingQueryDto(BaseModel):
+    user_id: str
+
+
 class CreateWritingBodyDto(WritingBodyDto):
     pass
 

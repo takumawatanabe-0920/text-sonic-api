@@ -18,34 +18,34 @@ class UserRepository:
             new_user = User(**user.dict())
             uow.db.add(new_user)
 
-        return UserGet.from_orm(new_user)
+            return UserGet.from_orm(new_user)
 
     def get_by_id(self, id_: str) -> Optional[UserGet]:  # noqa: A003
         with self.uow as uow:
             result = uow.db.execute(select(User).filter(User.id == id_))
             user = result.scalars().first()
 
-        if not user:
-            return None
+            if not user:
+                return None
 
-        return UserGet.from_orm(user)
+            return UserGet.from_orm(user)
 
     def get_by_email(self, email: str) -> Optional[UserGet]:  # noqa: A003
         with self.uow as uow:
             result = uow.db.execute(select(User).filter(User.email == email))
             user = result.scalars().first()
 
-        if not user:
-            return None
+            if not user:
+                return None
 
-        return UserGet.from_orm(user)
+            return UserGet.from_orm(user)
 
     def get_all(self) -> list[UserGet]:
         with self.uow as uow:
             result = uow.db.execute(select(User))
             users = result.scalars().all()
 
-        return [UserGet.from_orm(user) for user in users]
+            return [UserGet.from_orm(user) for user in users]
 
     def update(self, id_: str, user: UserUpdate) -> Optional[UserGet]:  # noqa: A003
         with self.uow as uow:

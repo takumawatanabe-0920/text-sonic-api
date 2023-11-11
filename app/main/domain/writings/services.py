@@ -7,6 +7,7 @@ from app.main.domain.common.dto.response_dto import StatusResponse
 from app.main.domain.writings.dto.request_dto import (
     CreateWritingBodyDto,
     UpdateWritingBodyDto,
+    WritingQueryDto,
 )
 from app.main.domain.writings.dto.response_dto import (
     WritingDto,
@@ -28,8 +29,8 @@ class WritingService:
     ):
         self.__writing_repository = writing_repository
 
-    def get_writings(self) -> WritingsResponse:
-        writings = self.__writing_repository.get_all()
+    def get_writings(self, user_id) -> WritingsResponse:
+        writings = self.__writing_repository.get_all(user_id)
         return self.__convert_list_response(writings)
 
     def get_writing_by_id(self, id_: str) -> WritingResponse:

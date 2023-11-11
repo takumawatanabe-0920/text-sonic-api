@@ -4,6 +4,7 @@ from fastapi import Depends, HTTPException
 
 from app.core.log.logger import logger
 from app.main.auth.jwt import get_password_hash
+from app.main.domain.auth.dto.request_dto import LoginBodyDto
 from app.main.domain.auth.dto.response_dto import LoginResponse
 from app.main.domain.auth.services import AuthService
 from app.main.domain.common.dto.response_dto import StatusResponse
@@ -53,7 +54,7 @@ class UserService:
         if not created_user:
             raise HTTPException(status_code=404, detail="User not found")
 
-        return self.__auth_service.login(user.email)
+        return self.__auth_service.login(LoginBodyDto(**user.dict()))
 
     def update_user(self, user_id: str, user: UpdateUserBodyDto) -> UserResponse:
         updated_user = self.__user_repository.update(
