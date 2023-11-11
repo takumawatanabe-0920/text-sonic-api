@@ -17,6 +17,7 @@ class UserRepository:
         with self.uow as uow:
             new_user = User(**user.dict())
             uow.db.add(new_user)
+            uow.db.commit()
 
             return UserGet.from_orm(new_user)
 
