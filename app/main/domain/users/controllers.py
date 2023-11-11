@@ -8,6 +8,7 @@ from app.main.domain.common.dto.response_dto import StatusResponse
 from app.main.domain.users.dto.request_dto import CreateUserBodyDto, UpdateUserBodyDto
 from app.main.domain.users.dto.response_dto import UserDto, UserResponse, UsersResponse
 from app.main.domain.users.services import UserService
+from app.main.auth.jwt import oauth2_scheme
 
 router = APIRouter()
 
@@ -21,9 +22,12 @@ async def get_users(
 
 @router.get("/users/me", response_model=UserResponse)
 async def get_user_by_id(
-    auth_service: Annotated[AuthService, Depends(AuthService)]
+    auth_service: Annotated[AuthService, Depends(AuthService)],
+    __token: Annotated[str, Depends(oauth2_scheme)],
 ) -> UserResponse:
-    return UserResponse(message=UserDto(**auth_service.get_current_user().dict()))
+    return UserResponse(
+        message=UserDto(**auth_service.get_current_user(__token).dict())
+    )
 
 
 @router.post("/users", response_model=LoginResponse)
@@ -39,8 +43,9 @@ async def update_user(
     reqBody: UpdateUserBodyDto,
     user_service: Annotated[UserService, Depends(UserService)],
     auth_service: Annotated[AuthService, Depends(AuthService)],
+    __token: Annotated[str, Depends(oauth2_scheme)],
 ) -> UserResponse:
-    current_user = auth_service.get_current_user()
+    current_user = auth_service.get_current_user(__token)
     return user_service.update_user(current_user.id, reqBody)
 
 
@@ -48,6 +53,7 @@ async def update_user(
 async def delete_user(
     user_service: Annotated[UserService, Depends(UserService)],
     auth_service: Annotated[AuthService, Depends(AuthService)],
+    __token: Annotated[str, Depends(oauth2_scheme)],
 ) -> StatusResponse:
-    current_user = auth_service.get_current_user()
+    current_user = auth_service.get_current_user(__token)
     return user_service.delete_user(current_user.id)

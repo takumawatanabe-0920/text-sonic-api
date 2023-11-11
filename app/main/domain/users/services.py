@@ -4,6 +4,7 @@ from fastapi import Depends, HTTPException
 
 from app.core.log.logger import logger
 from app.main.auth.jwt import get_password_hash
+from app.main.domain.auth.dto.request_dto import LoginBodyDto
 from app.main.domain.auth.dto.response_dto import LoginResponse
 from app.main.domain.auth.services import AuthService
 from app.main.domain.common.dto.response_dto import StatusResponse
@@ -43,6 +44,9 @@ class UserService:
 
     def create_user(self, user: CreateUserBodyDto) -> LoginResponse:
         encrypted_password = get_password_hash(user.password)
+        db_user = self.__user_repository.get_by_email(user.email)
+        if db_user:
+            raise HTTPException(status_code=400, detail="Email already registered")
         created_user = self.__user_repository.save(
             UserCreate(email=user.email, encrypted_password=encrypted_password)
         )
@@ -50,7 +54,7 @@ class UserService:
         if not created_user:
             raise HTTPException(status_code=404, detail="User not found")
 
-        return self.__auth_service.login(user.email)
+        return self.__auth_service.login(LoginBodyDto(**user.dict()))
 
     def update_user(self, user_id: str, user: UpdateUserBodyDto) -> UserResponse:
         updated_user = self.__user_repository.update(

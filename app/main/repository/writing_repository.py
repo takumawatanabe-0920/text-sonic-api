@@ -21,25 +21,30 @@ class WritingRepository:
         with self.uow as uow:
             new_writing = Writing(**writing.dict())
             uow.db.add(new_writing)
+            uow.db.commit()
 
-        return WritingGet.from_orm(new_writing)
+            print(new_writing, "new_writing")
+
+            return WritingGet.from_orm(new_writing)
 
     def get_by_id(self, id_: str) -> Optional[WritingGet]:  # noqa: A003
         with self.uow as uow:
             result = uow.db.execute(select(Writing).filter(Writing.id == id_))
             writing = result.scalars().first()
 
-        if not writing:
-            return None
+            if not writing:
+                return None
 
-        return WritingGet.from_orm(writing)
+            return WritingGet.from_orm(writing)
 
-    def get_all(self) -> list[WritingGet]:
+    def get_all(self, __user_id: str) -> list[WritingGet]:
         with self.uow as uow:
-            result = uow.db.execute(select(Writing))
+            result = uow.db.execute(
+                select(Writing).filter(Writing.user_id == __user_id)
+            )
             writings = result.scalars().all()
 
-        return [WritingGet.from_orm(writing) for writing in writings]
+            return [WritingGet.from_orm(writing) for writing in writings]
 
     def update(
         self, id_: str, writing: WritingUpdate
@@ -55,7 +60,7 @@ class WritingRepository:
             uow.db.commit()
             updated_writing = self.get_by_id(id_)
 
-        return updated_writing
+            return updated_writing
 
     def delete(self, id_: str, user_id: str) -> None:
         with self.uow as uow:

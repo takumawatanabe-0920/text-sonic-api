@@ -28,8 +28,8 @@ class WritingService:
     ):
         self.__writing_repository = writing_repository
 
-    def get_writings(self) -> WritingsResponse:
-        writings = self.__writing_repository.get_all()
+    def get_writings(self, user_id) -> WritingsResponse:
+        writings = self.__writing_repository.get_all(user_id)
         return self.__convert_list_response(writings)
 
     def get_writing_by_id(self, id_: str) -> WritingResponse:
@@ -48,12 +48,14 @@ class WritingService:
             )
         )
 
-    def create_writing(self, writing: CreateWritingBodyDto) -> WritingResponse:
+    def create_writing(
+        self, __user_id: str, writing: CreateWritingBodyDto
+    ) -> WritingResponse:
         created_writing = self.__writing_repository.save(
             WritingCreate(
                 title=writing.title,
                 description=writing.description,
-                user_id=writing.user_id,
+                user_id=__user_id,
             )
         )
         if not created_writing:
@@ -69,7 +71,6 @@ class WritingService:
             WritingUpdate(
                 title=writing.title,
                 description=writing.description,
-                user_id=writing.user_id,
             ),
         )
 

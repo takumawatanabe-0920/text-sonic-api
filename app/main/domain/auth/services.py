@@ -1,13 +1,13 @@
 from typing import Annotated, Optional
 
 from fastapi import Depends, HTTPException, status
-
+from app.core.log.logger import logger
 from app.main.auth.jwt import (
     create_access_token,
     decode_access_token,
-    oauth2_scheme,
     verify_password,
 )
+from app.main.domain.auth.dto.request_dto import LoginBodyDto
 from app.main.domain.auth.dto.response_dto import LoginBase, LoginResponse
 from app.main.domain.users.dto.response_dto import UserDto
 from app.main.infrastructure.schemas.user_schema import UserGet
@@ -18,35 +18,37 @@ class AuthService:
     def __init__(
         self,
         user_repository: Annotated[UserRepository, Depends(UserRepository)],
-        token: Annotated[str, Depends(oauth2_scheme)],
     ):
         self.__user_repository = user_repository
-        self.__token = token
 
-    def login(self, email: str) -> LoginResponse:
+    def login(self, args: LoginBodyDto) -> LoginResponse:
+        email = args.email
+        password = args.password
+        logger.info("call-login %s", email)
         user = self.__user_repository.get_by_email(email)
         if not user:
             raise HTTPException(status_code=404, detail="User not found")
-        user = self.__authenticate_user(user.email, user.encrypted_password)
+        user = self.__authenticate_user(user.email, password)
         if not user:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Incorrect username or password",
                 headers={"WWW-Authenticate": "Bearer"},
             )
-        access_token = create_access_token(data={"sub": user.email})
+        access_token = create_access_token(data={"email": user.email})
 
         return LoginResponse(
             message=LoginBase(access_token=access_token, token_type="bearer")
         )
 
-    def get_current_user(self) -> UserDto:
-        user = decode_access_token(self.__token)
+    def get_current_user(self, __token: str) -> UserDto:
+        user = decode_access_token(__token)
         if not user:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Invalid authentication credentials",
             )
+        print(user, "user=decode")
         user = self.__user_repository.get_by_email(user["email"])
         if not user:
             raise HTTPException(

@@ -5,6 +5,7 @@ from app.main.domain.auth.services import AuthService
 
 from app.main.domain.common.dto.response_dto import StatusResponse
 from app.main.domain.writing_to_speech.services import WritingToSpeechService
+from app.main.auth.jwt import oauth2_scheme
 
 router = APIRouter()
 
@@ -16,6 +17,7 @@ async def convert_to_speech(
         WritingToSpeechService, Depends(WritingToSpeechService)
     ],
     auth_service: Annotated[AuthService, Depends(AuthService)],
+    __token: Annotated[str, Depends(oauth2_scheme)],
 ) -> StatusResponse:
-    auth_service.get_current_user()
+    auth_service.get_current_user(__token)
     return writing_to_speech_service.convert_to_speech(writing_id)
