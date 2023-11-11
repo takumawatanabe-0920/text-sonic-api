@@ -7,7 +7,6 @@ from app.main.domain.common.dto.response_dto import StatusResponse
 from app.main.domain.writings.dto.request_dto import (
     CreateWritingBodyDto,
     UpdateWritingBodyDto,
-    WritingQueryDto,
 )
 from app.main.domain.writings.dto.response_dto import (
     WritingDto,
@@ -49,12 +48,14 @@ class WritingService:
             )
         )
 
-    def create_writing(self, writing: CreateWritingBodyDto) -> WritingResponse:
+    def create_writing(
+        self, __user_id: str, writing: CreateWritingBodyDto
+    ) -> WritingResponse:
         created_writing = self.__writing_repository.save(
             WritingCreate(
                 title=writing.title,
                 description=writing.description,
-                user_id=writing.user_id,
+                user_id=__user_id,
             )
         )
         if not created_writing:
@@ -70,7 +71,6 @@ class WritingService:
             WritingUpdate(
                 title=writing.title,
                 description=writing.description,
-                user_id=writing.user_id,
             ),
         )
 

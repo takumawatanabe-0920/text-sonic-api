@@ -40,7 +40,7 @@ async def create_writing(
 ) -> WritingResponse:
     current_user = auth_service.get_current_user(__token)
     return writing_service.create_writing(
-        CreateWritingBodyDto(**reqBody.dict(), user_id=current_user.id)
+        current_user.id, CreateWritingBodyDto(**reqBody.dict())
     )
 
 
@@ -52,10 +52,10 @@ async def update_writing(
     auth_service: Annotated[AuthService, Depends(AuthService)],
     __token: Annotated[str, Depends(oauth2_scheme)],
 ) -> WritingResponse:
-    current_user = auth_service.get_current_user(__token)
+    auth_service.get_current_user(__token)
     return writing_service.update_writing(
         id_,
-        UpdateWritingBodyDto(**reqBody.dict(), user_id=current_user.id),
+        UpdateWritingBodyDto(**reqBody.dict()),
     )
 
 

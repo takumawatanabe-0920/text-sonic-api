@@ -21,6 +21,9 @@ class WritingRepository:
         with self.uow as uow:
             new_writing = Writing(**writing.dict())
             uow.db.add(new_writing)
+            uow.db.commit()
+
+            print(new_writing, "new_writing")
 
             return WritingGet.from_orm(new_writing)
 
