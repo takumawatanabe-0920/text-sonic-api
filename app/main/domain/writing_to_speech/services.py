@@ -2,10 +2,9 @@ from typing import Annotated
 
 from fastapi import Depends
 
-from app.core.log.logger import logger
-from app.main.domain.common.dto.response_dto import StatusResponse
 from app.main.domain.writings.services import WritingService
 from app.main.text_to_speech.tts_client import TextToSpeechClient
+from fastapi.responses import FileResponse
 
 
 class WritingToSpeechService:
@@ -19,16 +18,10 @@ class WritingToSpeechService:
         self.writing_service = writing_service
         self.text_to_speech_client = text_to_speech_client
 
-    def convert_to_speech(self, writing_id: str) -> StatusResponse:
-        try:
-            writing = self.writing_service.get_writing_by_id(writing_id)
-
-            file_name = writing.message.id + ".mp3"
-            self.text_to_speech_client.synthesize_speech(
-                writing.message.description, "audio/" + file_name
-            )
-            return StatusResponse(message="OK")
-        # pylint: disable=broad-exception-caught
-        except Exception as e:
-            logger.error(e)
-            return StatusResponse(message="NG")
+    def convert_to_speech(self, writing_id: str) -> FileResponse:
+        writing = self.writing_service.get_writing_by_id(writing_id)
+        file_name = "audio/" + writing.message.id + ".mp3"
+        self.text_to_speech_client.synthesize_speech(
+            writing.message.description, file_name
+        )
+        return FileResponse(file_name, media_type="audio/mpeg")
