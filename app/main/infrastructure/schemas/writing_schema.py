@@ -16,7 +16,7 @@ class WritingGet(BaseModel):
     description: str
     user_id: Optional[str] = None
     scripts: list[dict]
-    script: str
+    script: Optional[str]
     created_at: datetime
     updated_at: datetime
 

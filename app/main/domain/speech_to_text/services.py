@@ -1,4 +1,4 @@
-from typing import Annotated
+from typing import Annotated, Optional
 
 from fastapi import Depends, HTTPException
 
@@ -46,13 +46,13 @@ class SpeechToTextService:
         )
         return SpeechToTextResponseDto(message=response)
 
-    def __has_cached_audio(self, scrips: list[dict], _script: str) -> bool:
+    def __has_cached_audio(self, scrips: list[dict], _script: Optional[str]) -> bool:
         for script in scrips:
             if (
                 "start" in script
                 and "end" in script
                 and "word" in script
-                and _script != ""
+                and _script != None
             ):
                 return True
         return False
