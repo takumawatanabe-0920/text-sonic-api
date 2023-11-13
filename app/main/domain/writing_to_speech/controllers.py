@@ -2,10 +2,10 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends
 from fastapi.responses import FileResponse
-from app.main.domain.auth.services import AuthService
 
-from app.main.domain.writing_to_speech.services import WritingToSpeechService
 from app.main.auth.jwt import oauth2_scheme
+from app.main.domain.auth.services import AuthService
+from app.main.domain.writing_to_speech.services import WritingToSpeechService
 
 router = APIRouter()
 

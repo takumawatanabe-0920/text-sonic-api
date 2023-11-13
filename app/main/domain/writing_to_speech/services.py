@@ -1,11 +1,11 @@
+import os
 from typing import Annotated
 
 from fastapi import Depends
+from fastapi.responses import FileResponse
 
 from app.main.domain.writings.services import WritingService
 from app.main.text_to_speech.tts_client import TextToSpeechClient
-from fastapi.responses import FileResponse
-import os
 
 
 class WritingToSpeechService:

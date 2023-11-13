@@ -2,7 +2,9 @@ import re
 from typing import Annotated
 
 from fastapi import Depends, HTTPException
+from langdetect import detect
 from word2number import w2n
+
 from app.core.log.logger import logger
 from app.main.domain.common.dto.response_dto import StatusResponse
 from app.main.domain.writings.dto.request_dto import (
@@ -20,7 +22,6 @@ from app.main.infrastructure.schemas.writing_schema import (
     WritingUpdate,
 )
 from app.main.repository.writing_repository import WritingRepository
-from langdetect import detect
 
 # list of number words
 number_words = (
@@ -57,6 +58,7 @@ class WritingService:
                 title=writing.title,
                 description=writing.description,
                 user_id=writing.user_id,
+                scripts=writing.scripts,
                 created_at=writing.created_at,
                 updated_at=writing.updated_at,
             )
@@ -134,6 +136,7 @@ class WritingService:
                     id=writing.id,
                     title=writing.title,
                     description=writing.description,
+                    scripts=writing.scripts,
                     user_id=writing.user_id,
                     created_at=writing.created_at,
                     updated_at=writing.updated_at,

@@ -1,5 +1,7 @@
 from pydantic import BaseModel
 
+from app.main.speech_to_text.dto.response_dto import TranscribeSpeechWordDto
+
 
 class WritingBodyDto(BaseModel):
     title: str
@@ -15,4 +17,4 @@ class CreateWritingBodyDto(WritingBodyDto):
 
 
 class UpdateWritingBodyDto(WritingBodyDto):
-    pass
+    scripts: list[TranscribeSpeechWordDto]

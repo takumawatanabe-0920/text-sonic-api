@@ -3,7 +3,9 @@ from typing import Annotated
 from fastapi import Depends, HTTPException
 
 from app.main.domain.speech_to_text.dto.response_dto import SpeechToTextResponseDto
+from app.main.domain.writings.dto.request_dto import UpdateWritingBodyDto
 from app.main.domain.writings.services import WritingService
+from app.main.speech_to_text.dto.response_dto import TranscribeResponseDto
 from app.main.speech_to_text.stt_client import SpeechToTextClient
 
 
@@ -19,9 +21,30 @@ class SpeechToTextService:
         self.writing_service = writing_service
 
     def convert_to_text(self, writing_id: str) -> SpeechToTextResponseDto:
-        writing = self.writing_service.get_writing_by_id(writing_id)
+        writingResponse = self.writing_service.get_writing_by_id(writing_id)
+        writing = writingResponse.message
         if not writing:
             raise HTTPException(status_code=404, detail="Writing not found")
+        if self.__has_cached_audio(writing.scripts):
+            return SpeechToTextResponseDto(
+                message=TranscribeResponseDto(
+                    speech_word_list=writing.scripts, audio_time=0  # type: ignore
+                )
+            )
         audio_file = "audio/" + writing_id + ".mp3"
         response = self.text_to_speech_client.transcribe(audio_file)
+        self.writing_service.update_writing(
+            writing_id,
+            UpdateWritingBodyDto(
+                title=writing.title,
+                description=writing.description,
+                scripts=response.speech_word_list,
+            ),
+        )
         return SpeechToTextResponseDto(message=response)
+
+    def __has_cached_audio(self, scrips: list[dict]) -> bool:
+        for script in scrips:
+            if "start" in script and "end" in script and "word" in script:
+                return True
+        return False
