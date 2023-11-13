@@ -1,12 +1,9 @@
 from typing import Annotated, Optional
 
 from fastapi import Depends, HTTPException, status
+
 from app.core.log.logger import logger
-from app.main.auth.jwt import (
-    create_access_token,
-    decode_access_token,
-    verify_password,
-)
+from app.main.auth.jwt import create_access_token, decode_access_token, verify_password
 from app.main.domain.auth.dto.request_dto import LoginBodyDto
 from app.main.domain.auth.dto.response_dto import LoginBase, LoginResponse
 from app.main.domain.users.dto.response_dto import UserDto
