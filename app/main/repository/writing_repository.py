@@ -1,3 +1,4 @@
+import json
 from typing import Annotated, Optional
 
 import sqlalchemy as sa
@@ -54,8 +55,11 @@ class WritingRepository:
             uow.db.execute(
                 sa.update(Writing)
                 .where(Writing.id == id_)
-                .where(Writing.user_id == writing.user_id)
-                .values(**data)
+                .values(
+                    title=data["title"],
+                    description=data["description"],
+                    scripts=data["scripts"],
+                )
             )
             uow.db.commit()
             updated_writing = self.get_by_id(id_)

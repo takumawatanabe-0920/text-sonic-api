@@ -1,3 +1,4 @@
+from typing import Optional
 from pydantic import BaseModel
 
 from app.main.speech_to_text.dto.response_dto import TranscribeSpeechWordDto
@@ -17,4 +18,4 @@ class CreateWritingBodyDto(WritingBodyDto):
 
 
 class UpdateWritingBodyDto(WritingBodyDto):
-    scripts: list[TranscribeSpeechWordDto]
+    scripts: Optional[list[TranscribeSpeechWordDto]]

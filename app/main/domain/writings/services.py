@@ -17,6 +17,7 @@ from app.main.domain.writings.dto.response_dto import (
     WritingsResponse,
 )
 from app.main.infrastructure.schemas.writing_schema import (
+    TranscribeSpeechWordDto,
     WritingCreate,
     WritingGet,
     WritingUpdate,
@@ -112,6 +113,10 @@ class WritingService:
             WritingUpdate(
                 title=writing.title,
                 description=description,
+                scripts=[
+                    TranscribeSpeechWordDto.from_orm(script)
+                    for script in writing.scripts or []
+                ],
             ),
         )
 

@@ -23,6 +23,7 @@ class WritingToSpeechService:
         writing = self.writing_service.get_writing_by_id(writing_id)
         file_name = "audio/" + writing.message.id + ".mp3"
         if os.path.isfile(file_name):
+            print("file exists")
             return FileResponse(file_name, media_type="audio/mpeg")
         self.text_to_speech_client.synthesize_speech(
             writing.message.description, file_name

@@ -26,11 +26,13 @@ class SpeechToTextService:
         if not writing:
             raise HTTPException(status_code=404, detail="Writing not found")
         if self.__has_cached_audio(writing.scripts):
+            print("has cached audio")
             return SpeechToTextResponseDto(
                 message=TranscribeResponseDto(
                     speech_word_list=writing.scripts, audio_time=0  # type: ignore
                 )
             )
+
         audio_file = "audio/" + writing_id + ".mp3"
         response = self.text_to_speech_client.transcribe(audio_file)
         self.writing_service.update_writing(

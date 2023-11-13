@@ -23,6 +23,15 @@ class WritingGet(BaseModel):
         orm_mode = True
 
 
+class TranscribeSpeechWordDto(BaseModel):
+    start: float
+    end: float
+    word: str
+
+    class Config:
+        orm_mode = True
+
+
 class WritingCreate(WritingBase):
     pass
 
@@ -30,7 +39,11 @@ class WritingCreate(WritingBase):
 class WritingUpdate(BaseModel):
     title: str
     description: str
+    scripts: list[TranscribeSpeechWordDto]
     user_id: Optional[str] = None
+
+    class Config:
+        orm_mode = True
 
 
 class Writing(WritingBase):
