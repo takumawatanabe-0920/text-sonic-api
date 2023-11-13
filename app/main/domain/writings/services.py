@@ -1,7 +1,7 @@
 from typing import Annotated
 
 from fastapi import Depends, HTTPException
-
+from word2number import w2n
 from app.core.log.logger import logger
 from app.main.domain.common.dto.response_dto import StatusResponse
 from app.main.domain.writings.dto.request_dto import (
@@ -19,6 +19,7 @@ from app.main.infrastructure.schemas.writing_schema import (
     WritingUpdate,
 )
 from app.main.repository.writing_repository import WritingRepository
+from langdetect import detect
 
 
 class WritingService:
@@ -51,10 +52,22 @@ class WritingService:
     def create_writing(
         self, __user_id: str, writing: CreateWritingBodyDto
     ) -> WritingResponse:
+        if self.__is_english(writing.description) == False:
+            raise HTTPException(
+                status_code=400, detail="Writing description is not english"
+            )
+
+        if self.__check_length(writing.description) == False:
+            raise HTTPException(
+                status_code=400, detail="Writing description length is too long"
+            )
+
+        description = self.__transform_to_speech_description(writing.description)
+
         created_writing = self.__writing_repository.save(
             WritingCreate(
                 title=writing.title,
-                description=writing.description,
+                description=description,
                 user_id=__user_id,
             )
         )
@@ -66,11 +79,23 @@ class WritingService:
     def update_writing(
         self, id_: str, writing: UpdateWritingBodyDto
     ) -> WritingResponse:
+        if self.__is_english(writing.description) == False:
+            raise HTTPException(
+                status_code=400, detail="Writing description is not english"
+            )
+
+        if self.__check_length(writing.description) == False:
+            raise HTTPException(
+                status_code=400, detail="Writing description length is too long"
+            )
+
+        description = self.__transform_to_speech_description(writing.description)
+
         updated_writing = self.__writing_repository.update(
             id_,
             WritingUpdate(
                 title=writing.title,
-                description=writing.description,
+                description=description,
             ),
         )
 
@@ -102,3 +127,42 @@ class WritingService:
                 for writing in writings
             ]
         )
+
+    # length check
+    def __check_length(self, description: str) -> bool:
+        # remove space
+        description = description.replace(" ", "")
+        # remove new line
+        description = description.replace("\n", "")
+        length = len(description)
+        if length > 1000:
+            return False
+
+        return True
+
+    def __transform_to_speech_description(self, description: str) -> str:
+        removeHyphen = description.replace("-", "")
+        removeSpace = removeHyphen.replace("　", "")
+
+        return self.__word_to_num(removeSpace)
+
+    def __word_to_num(self, description: str) -> str:
+        words = description.split(" ")
+        for word in words:
+            try:
+                num = w2n.word_to_num(word)
+                description = description.replace(word, str(num))
+            except ValueError:
+                pass
+
+        return description
+
+    def __is_english(self, description: str) -> bool:
+        try:
+            lang = detect(description)
+            if lang == "en":
+                return True
+            else:
+                return False
+        except Exception:
+            return False
