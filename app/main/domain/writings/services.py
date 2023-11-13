@@ -114,6 +114,7 @@ class WritingService:
             WritingUpdate(
                 title=writing.title,
                 description=description,
+                script=writing.script,
                 scripts=[
                     TranscribeSpeechWordDto.from_orm(script)
                     for script in writing.scripts or []

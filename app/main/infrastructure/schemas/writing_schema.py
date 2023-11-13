@@ -41,6 +41,7 @@ class WritingUpdate(BaseModel):
     title: str
     description: str
     scripts: list[TranscribeSpeechWordDto]
+    script: Optional[str]
     user_id: Optional[str] = None
 
     class Config:

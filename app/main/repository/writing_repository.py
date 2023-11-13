@@ -59,6 +59,7 @@ class WritingRepository:
                     title=data["title"],
                     description=data["description"],
                     scripts=data["scripts"],
+                    script=data["script"],
                 )
             )
             uow.db.commit()

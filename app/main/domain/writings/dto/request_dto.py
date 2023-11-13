@@ -19,3 +19,4 @@ class CreateWritingBodyDto(WritingBodyDto):
 
 class UpdateWritingBodyDto(WritingBodyDto):
     scripts: Optional[list[TranscribeSpeechWordDto]]
+    script: Optional[str]

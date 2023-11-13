@@ -41,6 +41,7 @@ class SpeechToTextService:
                 title=writing.title,
                 description=writing.description,
                 scripts=response.speech_word_list,
+                script=response.script,
             ),
         )
         return SpeechToTextResponseDto(message=response)
