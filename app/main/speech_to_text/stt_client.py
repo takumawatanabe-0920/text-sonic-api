@@ -49,8 +49,17 @@ class SpeechToTextClient:
 
         speech_word_list = []
         audio_time = 0
+        script = ""
+        print("response.results", response.results)
         for result in response.results:
             best_alternative = result.alternatives[0]
+            print(
+                "best_alternative",
+                best_alternative,
+                "transcript",
+                best_alternative.transcript,
+            )
+            script += best_alternative.transcript
             for word in best_alternative.words:
                 print(word.start_offset.total_seconds())  # type: ignore
                 speech_word_list.append(
@@ -67,4 +76,5 @@ class SpeechToTextClient:
         return TranscribeResponseDto(
             speech_word_list=speech_word_list,
             audio_time=audio_time,
+            script=script,
         )

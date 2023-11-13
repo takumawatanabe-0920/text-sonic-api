@@ -9,6 +9,7 @@ class WritingDto(BaseModel):
     title: str
     description: str
     scripts: list[dict]
+    script: str
     user_id: Optional[str] = None
     created_at: datetime
     updated_at: datetime

@@ -25,11 +25,11 @@ class SpeechToTextService:
         writing = writingResponse.message
         if not writing:
             raise HTTPException(status_code=404, detail="Writing not found")
-        if self.__has_cached_audio(writing.scripts):
+        if self.__has_cached_audio(writing.scripts, writing.script):
             print("has cached audio")
             return SpeechToTextResponseDto(
                 message=TranscribeResponseDto(
-                    speech_word_list=writing.scripts, audio_time=0  # type: ignore
+                    speech_word_list=writing.scripts, script=writing.script, audio_time=0  # type: ignore
                 )
             )
 
@@ -45,8 +45,13 @@ class SpeechToTextService:
         )
         return SpeechToTextResponseDto(message=response)
 
-    def __has_cached_audio(self, scrips: list[dict]) -> bool:
+    def __has_cached_audio(self, scrips: list[dict], _script: str) -> bool:
         for script in scrips:
-            if "start" in script and "end" in script and "word" in script:
+            if (
+                "start" in script
+                and "end" in script
+                and "word" in script
+                and _script != ""
+            ):
                 return True
         return False

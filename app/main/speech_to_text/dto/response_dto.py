@@ -10,3 +10,4 @@ class TranscribeSpeechWordDto(BaseModel):
 class TranscribeResponseDto(BaseModel):
     audio_time: float
     speech_word_list: list[TranscribeSpeechWordDto]
+    script: str

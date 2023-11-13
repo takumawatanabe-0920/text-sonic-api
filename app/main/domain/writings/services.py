@@ -60,6 +60,7 @@ class WritingService:
                 description=writing.description,
                 user_id=writing.user_id,
                 scripts=writing.scripts,
+                script=writing.script,
                 created_at=writing.created_at,
                 updated_at=writing.updated_at,
             )
@@ -142,6 +143,7 @@ class WritingService:
                     title=writing.title,
                     description=writing.description,
                     scripts=writing.scripts,
+                    script=writing.script,
                     user_id=writing.user_id,
                     created_at=writing.created_at,
                     updated_at=writing.updated_at,
