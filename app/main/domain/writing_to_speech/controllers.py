@@ -20,4 +20,4 @@ async def convert_to_speech(
     __token: Annotated[str, Depends(oauth2_scheme)],
 ) -> FileResponse:
     auth_service.get_current_user(__token)
-    return writing_to_speech_service.convert_to_speech(writing_id)
+    return await writing_to_speech_service.convert_to_speech(writing_id)

@@ -12,6 +12,7 @@ sqlalchemy
 pylint
 google-cloud-texttospeech
 google-cloud-speech
+google-cloud-storage
 python-jose[cryptography]
 passlib[bcrypt]
 word2number

@@ -5,6 +5,8 @@ from dotenv import load_dotenv
 from google.cloud import texttospeech
 from google.oauth2 import service_account
 
+from app.main.utils.cloud_storage import CloudStorageLib, UploadMp3BodyDto
+
 load_dotenv()
 
 # get credentials from environment variable
@@ -26,8 +28,9 @@ class TextToSpeechClient:
         self.audio_config = texttospeech.AudioConfig(
             audio_encoding=texttospeech.AudioEncoding.MP3
         )
+        self.cloud_storage_lib = CloudStorageLib()
 
-    def synthesize_speech(self, text, output_filename):
+    async def synthesize_speech(self, text, output_filename) -> bytes:
         # Set the text input to be synthesized
         synthesis_input = texttospeech.SynthesisInput(text=text)
         # Perform the text-to-speech request on the text input with the selected
@@ -36,9 +39,12 @@ class TextToSpeechClient:
             input=synthesis_input, voice=self.voice, audio_config=self.audio_config
         )
 
-        # The response's audio_content is binary.
-        with open(output_filename, "wb") as out:
-            print("output_filename", output_filename)
-            # Write the response to the output file.
-            out.write(response.audio_content)
-            print(f'Audio content written to file "{output_filename}"')
+        await self.cloud_storage_lib.upload_mp3_data(
+            UploadMp3BodyDto(
+                bucket_name="text-sonic-speechs",
+                destination=output_filename,
+                mp3=response.audio_content,
+            )
+        )
+
+        return response.audio_content
