@@ -24,7 +24,7 @@ class SpeechToTextService:
         writingResponse = self.writing_service.get_writing_by_id(writing_id)
         writing = writingResponse.message
         if not writing:
-            raise HTTPException(status_code=404, detail="Writing not found")
+            raise HTTPException(status_code=404, detail="Script not found")
         if self.__has_cached_audio(writing.scripts, writing.script):
             print("has cached audio")
             return SpeechToTextResponseDto(

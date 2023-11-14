@@ -51,7 +51,7 @@ class WritingService:
     def get_writing_by_id(self, id_: str) -> WritingResponse:
         writing = self.__writing_repository.get_by_id(id_)
         if not writing:
-            raise HTTPException(status_code=404, detail="Writing not found")
+            raise HTTPException(status_code=404, detail="Script not found")
 
         return WritingResponse(
             message=WritingDto(
@@ -69,15 +69,15 @@ class WritingService:
     def create_writing(
         self, __user_id: str, writing: CreateWritingBodyDto
     ) -> WritingResponse:
-        # raise HTTPException(status_code=404, detail="Writing not found")
+        # raise HTTPException(status_code=404, detail="Script not found")
         if self.__is_english(writing.description) == False:
             raise HTTPException(
-                status_code=400, detail="Writing description is not english"
+                status_code=400, detail="Script description is not english"
             )
 
         if self.__check_length(writing.description) == False:
             raise HTTPException(
-                status_code=400, detail="Writing description length is too long"
+                status_code=400, detail="Script description length is too long"
             )
 
         description = self.__transform_to_speech_description(writing.description)
@@ -90,7 +90,7 @@ class WritingService:
             )
         )
         if not created_writing:
-            raise HTTPException(status_code=404, detail="Writing not found")
+            raise HTTPException(status_code=404, detail="Script not found")
 
         return self.get_writing_by_id(created_writing.id)
 
@@ -99,12 +99,12 @@ class WritingService:
     ) -> WritingResponse:
         if self.__is_english(writing.description) == False:
             raise HTTPException(
-                status_code=400, detail="Writing description is not english"
+                status_code=400, detail="Script description is not english"
             )
 
         if self.__check_length(writing.description) == False:
             raise HTTPException(
-                status_code=400, detail="Writing description length is too long"
+                status_code=400, detail="Script description length is too long"
             )
 
         description = self.__transform_to_speech_description(writing.description)
@@ -123,7 +123,7 @@ class WritingService:
         )
 
         if not updated_writing:
-            raise HTTPException(status_code=404, detail="Writing not found")
+            raise HTTPException(status_code=404, detail="Script not found")
 
         return self.get_writing_by_id(id_)
 
