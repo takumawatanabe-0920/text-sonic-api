@@ -1,3 +1,6 @@
+import os
+
+from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -12,7 +15,14 @@ from app.main.infrastructure import models
 from app.main.infrastructure.database.base import engine
 from app.main.middlware.log_middleware import LogMiddleware
 
+load_dotenv()
+
 models.Base.metadata.create_all(bind=engine)
+
+print(
+    "GOOGLE_APPLICATION_CREDENTIALS_JSON",
+    os.getenv("GOOGLE_APPLICATION_CREDENTIALS_JSON"),
+)
 
 app = FastAPI()
 app.add_middleware(LogMiddleware)
