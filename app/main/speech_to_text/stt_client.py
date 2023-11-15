@@ -7,6 +7,7 @@ from google.cloud.speech_v2.types import cloud_speech
 from google.oauth2 import service_account
 
 from app.main.speech_to_text.dto.response_dto import TranscribeResponseDto
+from app.core.log.logger import logger
 
 load_dotenv()
 
@@ -35,9 +36,12 @@ class SpeechToTextClient:
         self.recognizer = f"projects/{project_id}/locations/global/recognizers/_"
 
     def transcribe(self, audio_file) -> TranscribeResponseDto:
+        logger.info("transcribe")
         # Reads a file as bytes
         with open(audio_file, "rb") as f:
             content = f.read()
+
+        logger.info("before RecognizeRequest")
 
         request = cloud_speech.RecognizeRequest(
             recognizer=self.recognizer,
@@ -46,6 +50,8 @@ class SpeechToTextClient:
         )
         # Transcribes the audio into text
         response = self.client.recognize(request=request)
+
+        logger.info("after RecognizeRequest")
 
         speech_word_list = []
         audio_time = 0
@@ -62,6 +68,8 @@ class SpeechToTextClient:
                     }
                 )
             audio_time = result.result_end_offset.total_seconds()  # type: ignore
+
+        logger.info("transcribe response")
 
         return TranscribeResponseDto(
             speech_word_list=speech_word_list,

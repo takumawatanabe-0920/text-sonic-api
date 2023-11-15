@@ -2,12 +2,12 @@ from typing import Annotated, Optional
 
 from fastapi import Depends, HTTPException
 
-from app.main.domain.speech_to_text.dto.response_dto import \
-    SpeechToTextResponseDto
+from app.main.domain.speech_to_text.dto.response_dto import SpeechToTextResponseDto
 from app.main.domain.writings.dto.request_dto import UpdateWritingBodyDto
 from app.main.domain.writings.services import WritingService
 from app.main.speech_to_text.dto.response_dto import TranscribeResponseDto
 from app.main.speech_to_text.stt_client import SpeechToTextClient
+from app.core.log.logger import logger
 
 
 class SpeechToTextService:
@@ -22,12 +22,13 @@ class SpeechToTextService:
         self.writing_service = writing_service
 
     def convert_to_text(self, writing_id: str) -> SpeechToTextResponseDto:
+        logger.info("convert_to_text")
         writingResponse = self.writing_service.get_writing_by_id(writing_id)
         writing = writingResponse.message
         if not writing:
             raise HTTPException(status_code=404, detail="Script not found")
         if self.__has_cached_audio(writing.scripts, writing.script):
-            print("has cached audio")
+            logger.info("has cached audio")
             return SpeechToTextResponseDto(
                 message=TranscribeResponseDto(
                     speech_word_list=writing.scripts, script=writing.script, audio_time=0  # type: ignore
@@ -45,9 +46,11 @@ class SpeechToTextService:
                 script=response.script,
             ),
         )
+        logger.info("convert_to_text end")
         return SpeechToTextResponseDto(message=response)
 
     def __has_cached_audio(self, scrips: list[dict], _script: Optional[str]) -> bool:
+        logger.info("has_cached_audio")
         for script in scrips:
             if (
                 "start" in script

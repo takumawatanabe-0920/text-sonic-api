@@ -98,6 +98,8 @@ class WritingService:
     def update_writing(
         self, id_: str, writing: UpdateWritingBodyDto
     ) -> WritingResponse:
+        logger.info("update_writing")
+
         if self.__is_english(writing.description) == False:
             raise HTTPException(
                 status_code=400, detail="Script description is not english"
@@ -167,6 +169,8 @@ class WritingService:
         return True
 
     def __transform_to_speech_description(self, description: str) -> str:
+        logger.info("transform_to_speech_description")
+
         removeSpace = description.replace("　", " ")
         partConvertNumber = self.__word_to_num(removeSpace)
         removeHyphen = partConvertNumber.replace("-", " ")
