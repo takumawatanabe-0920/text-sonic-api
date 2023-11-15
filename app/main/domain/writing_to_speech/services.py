@@ -3,7 +3,7 @@ from typing import Annotated, Optional
 
 from fastapi import Depends, HTTPException
 from fastapi.responses import FileResponse
-
+from app.core.log.logger import logger
 from app.main.domain.writings.services import WritingService
 from app.main.text_to_speech.tts_client import TextToSpeechClient
 from app.main.utils.cloud_storage import CloudStorageLib, DownloadMp3BodyDto
@@ -23,6 +23,7 @@ class WritingToSpeechService:
         self.cloud_storage_lib = cloud_storage_lib
 
     async def convert_to_speech(self, writing_id: str) -> FileResponse:
+        logger.info("convert_to_speech")
         writing = self.writing_service.get_writing_by_id(writing_id)
         file_name = "audio/" + writing.message.id + ".mp3"
         try:
@@ -33,8 +34,8 @@ class WritingToSpeechService:
             audio_file = self.__get_audio_file(file_name, mp3_data)
             if audio_file:
                 return audio_file
-        except:
-            print("file does not exist, so we will create a new file and return it.")
+        except Exception as e:
+            logger.error(e)
 
         audio_data = await self.text_to_speech_client.synthesize_speech(
             writing.message.description, file_name
@@ -47,6 +48,7 @@ class WritingToSpeechService:
         return audio_file
 
     def __get_audio_file(self, file_name: str, data: bytes) -> Optional[FileResponse]:
+        logger.info("get_audio_file")
         with open(file_name, "wb") as f:
             f.write(data)
 

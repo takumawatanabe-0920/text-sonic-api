@@ -4,7 +4,7 @@ import os
 from dotenv import load_dotenv
 from google.cloud import texttospeech
 from google.oauth2 import service_account
-
+from app.core.log.logger import logger
 from app.main.utils.cloud_storage import CloudStorageLib, UploadMp3BodyDto
 
 load_dotenv()
@@ -31,6 +31,7 @@ class TextToSpeechClient:
         self.cloud_storage_lib = CloudStorageLib()
 
     async def synthesize_speech(self, text, output_filename) -> bytes:
+        logger.info("synthesize_speech")
         # Set the text input to be synthesized
         synthesis_input = texttospeech.SynthesisInput(text=text)
         # Perform the text-to-speech request on the text input with the selected

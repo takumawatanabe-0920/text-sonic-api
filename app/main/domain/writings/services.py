@@ -7,13 +7,21 @@ from word2number import w2n
 
 from app.core.log.logger import logger
 from app.main.domain.common.dto.response_dto import StatusResponse
-from app.main.domain.writings.dto.request_dto import (CreateWritingBodyDto,
-                                                      UpdateWritingBodyDto)
-from app.main.domain.writings.dto.response_dto import (WritingDto,
-                                                       WritingResponse,
-                                                       WritingsResponse)
+from app.main.domain.writings.dto.request_dto import (
+    CreateWritingBodyDto,
+    UpdateWritingBodyDto,
+)
+from app.main.domain.writings.dto.response_dto import (
+    WritingDto,
+    WritingResponse,
+    WritingsResponse,
+)
 from app.main.infrastructure.schemas.writing_schema import (
-    TranscribeSpeechWordDto, WritingCreate, WritingGet, WritingUpdate)
+    TranscribeSpeechWordDto,
+    WritingCreate,
+    WritingGet,
+    WritingUpdate,
+)
 from app.main.repository.writing_repository import WritingRepository
 
 # list of number words
@@ -41,6 +49,7 @@ class WritingService:
         return self.__convert_list_response(writings)
 
     def get_writing_by_id(self, id_: str) -> WritingResponse:
+        logger.info("get_writing_by_id")
         writing = self.__writing_repository.get_by_id(id_)
         if not writing:
             raise HTTPException(status_code=404, detail="Script not found")

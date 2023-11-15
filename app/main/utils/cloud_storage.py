@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from google.cloud import storage
 from google.oauth2 import service_account
 from pydantic import BaseModel
+from app.core.log.logger import logger
 
 
 class UploadMp3BodyDto(BaseModel):
@@ -32,7 +33,7 @@ class CloudStorageLib:
         self.storage_client = storage.Client(credentials=credentials)
 
     async def upload_mp3_data(self, data: UploadMp3BodyDto) -> None:
-        print("upload_mp3_data")
+        logger.info("upload_mp3_data")
         bucket_name = data.bucket_name
         destination = data.destination
         mp3_data = data.mp3
@@ -41,15 +42,17 @@ class CloudStorageLib:
         blob = bucket.blob(destination)
 
         blob.upload_from_string(mp3_data, content_type="audio/mpeg")
-        print("upload_from_string")
+        logger.info("upload_from_string")
         return None
 
     async def download_mp3_data(self, data) -> bytes:
-        print("download_mp3_data")
+        logger.info("download_mp3_data")
         bucket_name = data.bucket_name
         source = data.source
 
         bucket = self.storage_client.bucket(bucket_name)
         blob = bucket.blob(source)
+
+        logger.info("before download_as_string")
 
         return blob.download_as_string()
