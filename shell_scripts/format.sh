@@ -7,4 +7,4 @@ black $(git ls-files '*.py')
 isort ./app
 
 # Remove unused imports and variables
-# autoflake --in-place --remove-all-unused-imports --ignore-init-module-imports $(git ls-files '*.py')
+autoflake --in-place --remove-all-unused-imports --ignore-init-module-imports $(git ls-files '*.py')

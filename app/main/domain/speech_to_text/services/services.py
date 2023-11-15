@@ -4,13 +4,9 @@ from fastapi import Depends, HTTPException
 
 from app.core.log.logger import logger
 from app.main.domain.speech_to_text.dto.response_dto import (
-    SpeechToTextDto,
-    SpeechToTextResponseDto,
-)
-from app.main.domain.speech_to_text.services.process_and_map_sentences_executor import (
-    ProcessAndMapSentencesExecutor,
-)
-
+    SpeechToTextDto, SpeechToTextResponseDto)
+from app.main.domain.speech_to_text.services.process_and_map_sentences_executor import \
+    ProcessAndMapSentencesExecutor
 from app.main.domain.writings.dto.request_dto import UpdateWritingBodyDto
 from app.main.domain.writings.services import WritingService
 from app.main.speech_to_text.dto.response_dto import TranscribeResponseDto
