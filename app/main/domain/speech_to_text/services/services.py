@@ -4,9 +4,12 @@ from fastapi import Depends, HTTPException
 
 from app.core.log.logger import logger
 from app.main.domain.speech_to_text.dto.response_dto import (
-    SpeechToTextDto, SpeechToTextResponseDto)
-from app.main.domain.speech_to_text.services.process_and_map_sentences_executor import \
-    ProcessAndMapSentencesExecutor
+    SpeechToTextDto,
+    SpeechToTextResponseDto,
+)
+from app.main.domain.speech_to_text.services.process_and_map_sentences_executor import (
+    ProcessAndMapSentencesExecutor,
+)
 from app.main.domain.writings.dto.request_dto import UpdateWritingBodyDto
 from app.main.domain.writings.services import WritingService
 from app.main.speech_to_text.dto.response_dto import TranscribeResponseDto
@@ -28,7 +31,7 @@ class SpeechToTextService:
         self.writing_service = writing_service
         self.process_and_map_sentences_executor = process_and_map_sentences_executor
 
-    def convert_to_text(self, writing_id: str) -> SpeechToTextResponseDto:
+    async def convert_to_text(self, writing_id: str) -> SpeechToTextResponseDto:
         logger.info("convert_to_text")
         writingResponse = self.writing_service.get_writing_by_id(writing_id)
         writing = writingResponse.message
@@ -46,7 +49,7 @@ class SpeechToTextService:
             )
 
         audio_file = "audio/" + writing_id + ".mp3"
-        response = self.text_to_speech_client.transcribe(audio_file)
+        response = await self.text_to_speech_client.transcribe(audio_file)
         self.writing_service.update_writing(
             writing_id,
             UpdateWritingBodyDto(

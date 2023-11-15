@@ -37,10 +37,10 @@ class SpeechToTextClient:
         self.recognizer = f"projects/{project_id}/locations/global/recognizers/_"
         self.cloud_storage_lib = CloudStorageLib()
 
-    def transcribe(self, audio_file) -> TranscribeResponseDto:
-        logger.info("transcribe")
+    async def transcribe(self, audio_file) -> TranscribeResponseDto:
+        logger.info("transcribe: " + audio_file)
         print(audio_file)
-        content = self.cloud_storage_lib.download_mp3_data(
+        content = await self.cloud_storage_lib.download_mp3_data(
             DownloadMp3BodyDto(bucket_name="text-sonic-speechs", source=audio_file)
         )
 
