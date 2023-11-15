@@ -74,5 +74,3 @@ class WritingRepository:
                 .where(Writing.user_id == user_id)
             )
             uow.db.commit()
-
-        return None

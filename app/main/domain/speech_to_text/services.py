@@ -80,7 +80,7 @@ class SpeechToTextService:
     ) -> SpeechToTextResponseDto:
         logger.info("convert_response")
         sentences = self.process_and_map_sentences_executor.exec(
-            response.speech_word_list, original_script
+            response.speech_word_list, original_script  # type: ignore
         )
         return SpeechToTextResponseDto(
             message=SpeechToTextDto(
