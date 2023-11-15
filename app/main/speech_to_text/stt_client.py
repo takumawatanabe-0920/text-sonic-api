@@ -8,6 +8,7 @@ from google.oauth2 import service_account
 
 from app.core.log.logger import logger
 from app.main.speech_to_text.dto.response_dto import TranscribeResponseDto
+from app.main.utils.cloud_storage import CloudStorageLib, DownloadMp3BodyDto
 
 load_dotenv()
 
@@ -34,12 +35,13 @@ class SpeechToTextClient:
             ),
         )
         self.recognizer = f"projects/{project_id}/locations/global/recognizers/_"
+        self.cloud_storage_lib = CloudStorageLib()
 
     def transcribe(self, audio_file) -> TranscribeResponseDto:
         logger.info("transcribe")
-        # Reads a file as bytes
-        with open(audio_file, "rb") as f:
-            content = f.read()
+        content = self.cloud_storage_lib.download_mp3_data(
+            DownloadMp3BodyDto(bucket_name="text-sonic-speechs", source=audio_file)
+        )
 
         logger.info("before RecognizeRequest")
 
