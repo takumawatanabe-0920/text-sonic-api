@@ -27,8 +27,7 @@ print(
 app = FastAPI()
 app.add_middleware(LogMiddleware)
 origins = [
-    "http://localhost:3016",
-    "https://text-sonic.vercel.app",
+    os.getenv("FRONTEND_URL"),
 ]
 
 app.add_middleware(
