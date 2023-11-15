@@ -4,7 +4,8 @@ from fastapi import APIRouter, Depends
 
 from app.main.auth.jwt import oauth2_scheme
 from app.main.domain.auth.services import AuthService
-from app.main.domain.speech_to_text.dto.response_dto import SpeechToTextResponseDto
+from app.main.domain.speech_to_text.dto.response_dto import \
+    SpeechToTextResponseDto
 from app.main.domain.speech_to_text.services import SpeechToTextService
 
 router = APIRouter()

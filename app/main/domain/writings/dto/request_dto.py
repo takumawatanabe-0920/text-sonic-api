@@ -1,4 +1,5 @@
 from typing import Optional
+
 from pydantic import BaseModel
 
 from app.main.speech_to_text.dto.response_dto import TranscribeSpeechWordDto

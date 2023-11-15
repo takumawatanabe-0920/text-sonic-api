@@ -2,7 +2,8 @@ from typing import Annotated, Optional
 
 from fastapi import Depends, HTTPException
 
-from app.main.domain.speech_to_text.dto.response_dto import SpeechToTextResponseDto
+from app.main.domain.speech_to_text.dto.response_dto import \
+    SpeechToTextResponseDto
 from app.main.domain.writings.dto.request_dto import UpdateWritingBodyDto
 from app.main.domain.writings.services import WritingService
 from app.main.speech_to_text.dto.response_dto import TranscribeResponseDto

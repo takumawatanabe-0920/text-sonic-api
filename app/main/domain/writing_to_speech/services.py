@@ -35,7 +35,6 @@ class WritingToSpeechService:
                 return audio_file
         except:
             print("file does not exist, so we will create a new file and return it.")
-            pass
 
         audio_data = await self.text_to_speech_client.synthesize_speech(
             writing.message.description, file_name
