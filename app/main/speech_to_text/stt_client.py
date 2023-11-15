@@ -6,8 +6,8 @@ from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 from google.oauth2 import service_account
 
-from app.main.speech_to_text.dto.response_dto import TranscribeResponseDto
 from app.core.log.logger import logger
+from app.main.speech_to_text.dto.response_dto import TranscribeResponseDto
 
 load_dotenv()
 

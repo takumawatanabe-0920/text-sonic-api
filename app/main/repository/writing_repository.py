@@ -6,9 +6,11 @@ from sqlalchemy.future import select
 
 from app.main.infrastructure.database.unit_of_work import UnitOfWork
 from app.main.infrastructure.models import Writing
-from app.main.infrastructure.schemas.writing_schema import (WritingCreate,
-                                                            WritingGet,
-                                                            WritingUpdate)
+from app.main.infrastructure.schemas.writing_schema import (
+    WritingCreate,
+    WritingGet,
+    WritingUpdate,
+)
 
 
 class WritingRepository:

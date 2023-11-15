@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from google.cloud import storage
 from google.oauth2 import service_account
 from pydantic import BaseModel
+
 from app.core.log.logger import logger
 
 

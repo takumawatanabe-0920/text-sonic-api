@@ -4,6 +4,7 @@ import os
 from dotenv import load_dotenv
 from google.cloud import texttospeech
 from google.oauth2 import service_account
+
 from app.core.log.logger import logger
 from app.main.utils.cloud_storage import CloudStorageLib, UploadMp3BodyDto
 

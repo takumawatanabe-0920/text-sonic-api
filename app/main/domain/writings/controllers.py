@@ -5,10 +5,11 @@ from fastapi import APIRouter, Depends
 from app.main.auth.jwt import oauth2_scheme
 from app.main.domain.auth.services import AuthService
 from app.main.domain.common.dto.response_dto import StatusResponse
-from app.main.domain.writings.dto.request_dto import (CreateWritingBodyDto,
-                                                      UpdateWritingBodyDto)
-from app.main.domain.writings.dto.response_dto import (WritingResponse,
-                                                       WritingsResponse)
+from app.main.domain.writings.dto.request_dto import (
+    CreateWritingBodyDto,
+    UpdateWritingBodyDto,
+)
+from app.main.domain.writings.dto.response_dto import WritingResponse, WritingsResponse
 from app.main.domain.writings.services import WritingService
 
 router = APIRouter()
