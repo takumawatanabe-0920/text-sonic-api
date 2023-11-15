@@ -39,11 +39,13 @@ class SpeechToTextClient:
 
     def transcribe(self, audio_file) -> TranscribeResponseDto:
         logger.info("transcribe")
+        print(audio_file)
         content = self.cloud_storage_lib.download_mp3_data(
             DownloadMp3BodyDto(bucket_name="text-sonic-speechs", source=audio_file)
         )
 
         logger.info("before RecognizeRequest")
+        print(content)
 
         request = cloud_speech.RecognizeRequest(
             recognizer=self.recognizer,
