@@ -8,12 +8,6 @@ from sqlalchemy.orm import relationship
 from app.main.infrastructure.database.base import Base
 
 
-class Exam(Base):
-    __tablename__ = "exam"
-
-    id = Column(String(36), primary_key=True, index=True, default=uuid.uuid4)
-
-
 class User(Base):
     __tablename__ = "user"
 
