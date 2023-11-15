@@ -1,6 +1,5 @@
 from typing import Optional
 from app.main.domain.speech_to_text.dto.response_dto import SentenceInfoDto
-from app.main.domain.speech_to_text.services.sentence_processor import SentenceProcessor
 from app.main.infrastructure.schemas.writing_schema import TranscribeSpeechWordDto
 
 
@@ -18,8 +17,19 @@ class TranscriptMapper:
                 continue
 
             match_index = self.__find_match_index(sub_list, 0)
+            print(
+                match_index,
+                "match_index",
+                sub_list,
+                "sub_list",
+                start_time,
+                "start_time",
+                matched_indices,
+                "matched_indices",
+            )
             if match_index is not None and match_index not in matched_indices:
                 end_index = self.__find_end_index(sub_list, match_index)
+                print(end_index, "end_index")
                 sentence_info = self.__create_sentence_info(
                     sub_list, end_index, start_time
                 )
@@ -27,6 +37,7 @@ class TranscriptMapper:
                 start_time = sentence_info.end_time or 0
                 matched_indices.add(match_index)
 
+        print(mapped_sentences, "mapped_sentences")
         return mapped_sentences
 
     def __is_check_partial_match(self, word1: Optional[str], word2: Optional[str]):
@@ -58,18 +69,28 @@ class TranscriptMapper:
 
     def __find_end_index(self, sub_list, start_index) -> Optional[int]:
         last_word = sub_list[-1]
+        print(last_word, "last_word")
         for i in range(start_index, len(self.speech_word_list)):
             transcript = self.speech_word_list[i]
             is_partial_match = self.__is_check_partial_match(transcript.word, last_word)
+            if is_partial_match:
+                print("is_partial_match", is_partial_match, transcript.word, last_word)
             is_next_match = False
+            if is_partial_match:
+                return i
             if i + 1 < len(self.speech_word_list):
                 next_transcript = self.speech_word_list[i + 1]
                 is_next_match = self.__is_check_partial_match(
                     next_transcript.word, last_word
                 )
-
-            if is_partial_match or is_next_match:
-                return i
+                if is_next_match:
+                    print(
+                        "is_next_match",
+                        is_next_match,
+                        next_transcript.word,
+                        last_word,
+                    )
+                    return i + 1
         return None
 
     def __create_sentence_info(
@@ -88,12 +109,3 @@ class TranscriptMapper:
             start_time=start_time,
             end_time=end_time,
         )
-
-
-class ProcessAndMapSentencesExecutor:
-    @staticmethod
-    def exec(
-        speech_word_list: list[TranscribeSpeechWordDto], original_script: str
-    ) -> list[SentenceInfoDto]:
-        sentences = SentenceProcessor.process_sentences(original_script)
-        return TranscriptMapper(speech_word_list).map_sentences(sentences)
