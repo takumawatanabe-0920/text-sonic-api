@@ -1,16 +1,13 @@
 version: "3.0"
 
 services:
-  text-sonic-api:
-    container_name: "text-sonic-api"
-    volumes:
-      - ./app:/app
-    build: .
-    ports:
-      - 8080:8080
-    network_mode: "host"
-    depends_on:
-      - text-sonic-db
+  # text-sonic-api:
+  #   container_name: "text-sonic-api"
+  #   volumes:
+  #     - ./app:/app
+  #   build: .
+  #   ports:
+  #     - 8080:8080
   text-sonic-db:
     image: mysql:8.0.28
     # M1チップ対応のため追記
@@ -26,4 +23,3 @@ services:
       MYSQL_DATABASE: text-sonic
       MYSQL_PASSWORD: password
       MYSQL_ROOT_PASSWORD: password
-    network_mode: "host"
