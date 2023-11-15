@@ -19,15 +19,12 @@ load_dotenv()
 
 models.Base.metadata.create_all(bind=engine)
 
-print(
-    "GOOGLE_APPLICATION_CREDENTIALS_JSON",
-    os.getenv("GOOGLE_APPLICATION_CREDENTIALS_JSON"),
-)
-
 app = FastAPI()
 app.add_middleware(LogMiddleware)
 origins = [
     os.getenv("FRONTEND_URL"),
+    "https://speechify-scripts.vercel.app/",
+    "https://speechify-scripts.vercel.app",
 ]
 
 app.add_middleware(
