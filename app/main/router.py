@@ -22,7 +22,7 @@ models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
 app.add_middleware(LogMiddleware)
 origins = [
-    # os.getenv("FRONTEND_URL"),
+    os.getenv("FRONTEND_URL"),
     "https://speechify-scripts.vercel.app/",
     "https://speechify-scripts.vercel.app",
 ]
