@@ -7,7 +7,7 @@ from app.main.domain.speech_to_text.dto.response_dto import (
     SpeechToTextDto,
     SpeechToTextResponseDto,
 )
-from app.main.domain.speech_to_text.generate_sentence_map import (
+from app.main.domain.speech_to_text.services.generate_sentence_map import (
     ProcessAndMapSentencesExecutor,
 )
 

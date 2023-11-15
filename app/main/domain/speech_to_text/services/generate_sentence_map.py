@@ -1,22 +1,7 @@
 from typing import Optional
 from app.main.domain.speech_to_text.dto.response_dto import SentenceInfoDto
+from app.main.domain.speech_to_text.services.sentence_processor import SentenceProcessor
 from app.main.infrastructure.schemas.writing_schema import TranscribeSpeechWordDto
-
-
-class SentenceProcessor:
-    @staticmethod
-    def process_sentences(original_script: str) -> list[list[str]]:
-        sentences: list[str] = []
-        temp_sentence = ""
-        for char in original_script:
-            temp_sentence += char
-            if char == ".":
-                sentences.append(temp_sentence.strip())
-                temp_sentence = ""
-        if temp_sentence:
-            sentences.append(temp_sentence.strip())
-
-        return [sentence.split(" ") for sentence in sentences if sentence]
 
 
 class TranscriptMapper:
