@@ -61,5 +61,3 @@ class UserRepository:
         with self.uow as uow:
             uow.db.execute(sa.delete(User).where(User.id == id_))
             uow.db.commit()
-
-        return None

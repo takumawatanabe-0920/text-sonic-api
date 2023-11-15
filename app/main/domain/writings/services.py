@@ -1,5 +1,5 @@
 import re
-from typing import Annotated
+from typing import Annotated, Optional, Union
 
 from fastapi import Depends, HTTPException
 from langdetect import detect
@@ -205,11 +205,10 @@ class WritingService:
             lang = detect(description)
             if lang == "en":
                 return True
-            else:
-                return False
+            return False
         except Exception:
             return False
 
 
-def replace_with_numbers(text, word, num):
+def replace_with_numbers(text: str, word: str, num: Optional[Union[int, float]]) -> str:
     return re.sub(r"\b{}\b".format(word), str(num), text, flags=re.IGNORECASE)

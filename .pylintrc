@@ -107,7 +107,15 @@ disable=
     fixme,
     cyclic-import,
     import-error,
-
+    consider-alternative-union-syntax,
+    wrong-import-order,
+    consider-using-alias,
+    useless-return,
+    no-else-return,
+    consider-using-f-string,
+    broad-exception-caught,
+    singleton-comparison,
+    consider-using-any-or-all,
 
 [REPORTS]
 
@@ -351,7 +359,7 @@ mixin-class-rgx=.*MixIn
 # (useful for modules/projects where namespaces are manipulated during runtime
 # and thus existing member attributes cannot be deduced by static analysis). It
 # supports qualified module names, as well as Unix pattern matching.
-ignored-modules=
+ignored-modules=alembic.context,alembic.op
 
 # List of class names for which member attributes should not be checked (useful
 # for classes with dynamically set attributes). This supports the use of
@@ -521,7 +529,6 @@ preferred-modules=
 overgeneral-exceptions=builtins.BaseException,
                        builtins.Exception
 
-
 [TYPING]
 
 # Set to ``no`` if the app / library does **NOT** need to support runtime
@@ -571,3 +578,4 @@ check-str-concat-over-line-jumps=no
 
 [MASTER]
 extension-pkg-whitelist=pydantic
+ignore-patterns=alembic/.*\.py,alembic/versions/.*\.py, alembic/versions/.*\.pyc
