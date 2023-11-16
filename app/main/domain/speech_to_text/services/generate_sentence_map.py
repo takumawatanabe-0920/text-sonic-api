@@ -19,21 +19,10 @@ class TranscriptMapper:
                 continue
 
             match_index = self.__find_match_index(sub_list, 0, matched_indices)
-            print(
-                "match_index",
-                match_index,
-                "sub_list",
-                sub_list,
-                "start_time",
-                start_time,
-                "matched_indices",
-                matched_indices,
-            )
             if match_index is not None and match_index not in matched_indices:
                 end_index = self.__find_end_index(
                     sub_list, match_index, matched_indices
                 )
-                print(end_index, "end_index")
                 sentence_info = self.__create_sentence_info(
                     sub_list, end_index, start_time
                 )
@@ -44,7 +33,6 @@ class TranscriptMapper:
                 if end_index is not None:
                     matched_indices.add(end_index)
 
-        print(mapped_sentences, "mapped_sentences")
         return mapped_sentences
 
     def __is_check_partial_match(self, word1: Optional[str], word2: Optional[str]):
@@ -55,7 +43,8 @@ class TranscriptMapper:
         cleaned_word1 = re.sub(r"[^\w\s]", "", word1.lower())
         cleaned_word2 = re.sub(r"[^\w\s]", "", word2.lower())
 
-        return cleaned_word1 in cleaned_word2 or cleaned_word2 in cleaned_word1
+        # strict match
+        return cleaned_word1 == cleaned_word2
 
     def __find_match_index(
         self, sub_list: list[str], start_index: int, matched_indices: set[int]
@@ -64,7 +53,6 @@ class TranscriptMapper:
         for i in range(start_index, len(self.speech_word_list)):
             # skip already matched index
             if i in matched_indices:
-                print("continue match")
                 continue
 
             transcript = self.speech_word_list[i]
@@ -91,21 +79,17 @@ class TranscriptMapper:
         for i in range(start_index, len(self.speech_word_list)):
             # skip already matched index
             if i in matched_indices:
-                print("continue end", matched_indices, i)
                 continue
 
             transcript = self.speech_word_list[i]
             is_partial_match = self.__is_check_partial_match(transcript.word, last_word)
-            print("is_partial_match", is_partial_match, transcript.word, last_word)
             if is_partial_match:
                 return i
             if i + 1 < len(self.speech_word_list) and (i + 1) not in matched_indices:
                 next_transcript = self.speech_word_list[i + 1]
-                print("next_transcript", next_transcript.word, last_word)
                 is_next_match = self.__is_check_partial_match(
                     next_transcript.word, last_word
                 )
-                print("is_next_match", is_next_match)
                 if is_next_match:
                     return i + 1
         return None
@@ -120,12 +104,6 @@ class TranscriptMapper:
             self.speech_word_list[end_index].end
             if end_index is not None and self.speech_word_list[end_index] is not None
             else None
-        )
-        print(
-            "end_time",
-            end_time,
-            "end_index",
-            end_index,
         )
         return SentenceInfoDto(
             sentence=" ".join(sub_list),
