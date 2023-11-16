@@ -1,8 +1,7 @@
 from typing import Optional
 
 from app.main.domain.speech_to_text.dto.response_dto import SentenceInfoDto
-from app.main.infrastructure.schemas.writing_schema import \
-    TranscribeSpeechWordDto
+from app.main.infrastructure.schemas.writing_schema import TranscribeSpeechWordDto
 
 
 class TranscriptMapper:
@@ -18,7 +17,7 @@ class TranscriptMapper:
             if not sub_list:
                 continue
 
-            match_index = self.__find_match_index(sub_list, 0)
+            match_index = self.__find_match_index(sub_list, 0, matched_indices)
             print(
                 match_index,
                 "match_index",
@@ -30,14 +29,19 @@ class TranscriptMapper:
                 "matched_indices",
             )
             if match_index is not None and match_index not in matched_indices:
-                end_index = self.__find_end_index(sub_list, match_index)
+                end_index = self.__find_end_index(
+                    sub_list, match_index, matched_indices
+                )
                 print(end_index, "end_index")
                 sentence_info = self.__create_sentence_info(
                     sub_list, end_index, start_time
                 )
                 mapped_sentences.append(sentence_info)
-                start_time = sentence_info.end_time or 0
+                if sentence_info.end_time is not None:
+                    start_time = sentence_info.end_time
                 matched_indices.add(match_index)
+                if end_index is not None:
+                    matched_indices.add(end_index)
 
         print(mapped_sentences, "mapped_sentences")
         return mapped_sentences
@@ -48,16 +52,21 @@ class TranscriptMapper:
         return word1.lower() in word2.lower() or word2.lower() in word1.lower()
 
     def __find_match_index(
-        self, sub_list: list[str], start_index: int
+        self, sub_list: list[str], start_index: int, matched_indices: set[int]
     ) -> Optional[int]:
         first_word = sub_list[0]
         for i in range(start_index, len(self.speech_word_list)):
+            # skip already matched index
+            if i in matched_indices:
+                print("continue match")
+                continue
+
             transcript = self.speech_word_list[i]
             is_partial_match = self.__is_check_partial_match(
                 transcript.word, first_word
             )
             is_next_match = False
-            if i + 1 < len(self.speech_word_list):
+            if i + 1 < len(self.speech_word_list) and (i + 1) not in matched_indices:
                 next_transcript = self.speech_word_list[i + 1]
                 is_next_match = (
                     self.__is_check_partial_match(next_transcript.word, sub_list[1])
@@ -69,29 +78,26 @@ class TranscriptMapper:
                 return i
         return None
 
-    def __find_end_index(self, sub_list, start_index) -> Optional[int]:
+    def __find_end_index(
+        self, sub_list: list[str], start_index: int, matched_indices: set[int]
+    ) -> Optional[int]:
         last_word = sub_list[-1]
-        print(last_word, "last_word")
         for i in range(start_index, len(self.speech_word_list)):
+            # skip already matched index
+            if i in matched_indices:
+                print("continue end")
+                continue
+
             transcript = self.speech_word_list[i]
             is_partial_match = self.__is_check_partial_match(transcript.word, last_word)
             if is_partial_match:
-                print("is_partial_match", is_partial_match, transcript.word, last_word)
-            is_next_match = False
-            if is_partial_match:
                 return i
-            if i + 1 < len(self.speech_word_list):
+            if i + 1 < len(self.speech_word_list) and (i + 1) not in matched_indices:
                 next_transcript = self.speech_word_list[i + 1]
                 is_next_match = self.__is_check_partial_match(
                     next_transcript.word, last_word
                 )
                 if is_next_match:
-                    print(
-                        "is_next_match",
-                        is_next_match,
-                        next_transcript.word,
-                        last_word,
-                    )
                     return i + 1
         return None
 

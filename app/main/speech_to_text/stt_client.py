@@ -45,7 +45,6 @@ class SpeechToTextClient:
         )
 
         logger.info("before RecognizeRequest")
-        print(content)
 
         request = cloud_speech.RecognizeRequest(
             recognizer=self.recognizer,
