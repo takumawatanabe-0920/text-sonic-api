@@ -14,6 +14,7 @@ from app.main.domain.writings.dto.request_dto import UpdateWritingBodyDto
 from app.main.domain.writings.services import WritingService
 from app.main.speech_to_text.dto.response_dto import TranscribeResponseDto
 from app.main.speech_to_text.stt_client import SpeechToTextClient
+from google.cloud import texttospeech
 
 
 class SpeechToTextService:
@@ -31,7 +32,9 @@ class SpeechToTextService:
         self.writing_service = writing_service
         self.process_and_map_sentences_executor = process_and_map_sentences_executor
 
-    async def convert_to_text(self, writing_id: str) -> SpeechToTextResponseDto:
+    async def convert_to_text(
+        self, writing_id: str, gender: texttospeech.SsmlVoiceGender
+    ) -> SpeechToTextResponseDto:
         logger.info("convert_to_text")
         writingResponse = self.writing_service.get_writing_by_id(writing_id)
         writing = writingResponse.message
@@ -48,7 +51,7 @@ class SpeechToTextService:
                 writing.description,
             )
 
-        audio_file = "audio/" + writing_id + ".mp3"
+        audio_file = "audio/" + gender.name + "/" + writing_id + ".mp3"
         response = await self.text_to_speech_client.transcribe(audio_file)
         self.writing_service.update_writing(
             writing_id,

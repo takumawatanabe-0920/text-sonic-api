@@ -2,7 +2,6 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends
 from fastapi.responses import StreamingResponse
-from google.cloud import texttospeech
 from app.core.log.logger import logger
 from app.main.auth.jwt import oauth2_scheme
 from app.main.domain.auth.services import AuthService
