@@ -19,3 +19,4 @@ word2number
 langdetect
 alembic
 pytest
+google-cloud-translate
