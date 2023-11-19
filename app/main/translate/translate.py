@@ -20,11 +20,7 @@ class TranslateTextClient:
         # Instantiates a client
         self.client = translate.Client(credentials=credentials)
 
-    def translate(self, text: str, target_language: str) -> str:
+    async def translate(self, text: str, target_language: str) -> str:
         result = self.client.translate(text, target_language=target_language)
-
-        print(f"Original: {result['input']}")
-        print(f"Translated: {result['translatedText']}")
-        print(result)
 
         return result["translatedText"]

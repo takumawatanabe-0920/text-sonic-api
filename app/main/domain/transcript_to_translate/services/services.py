@@ -24,36 +24,22 @@ class TranscriptToTranslateService:
         self, sentences: list[SentenceInfoDto]
     ) -> TranscriptToTranslateResponseDto:
         logger.info("translate")
+        print("sentences", sentences)
         translated_sentences = []
         tasks = [
-            SentenceInfoDto(
-                sentence=sentence.sentence,
+            self.translate_text_client.translate(sentence.sentence, "ja")
+            for sentence in sentences
+        ]
+        translated_sentences: list[str] = await asyncio.gather(*tasks)
+
+        sentence_info_list: list[SentenceInfoDtoResponse] = []
+        for index, sentence in enumerate(sentences):
+            translated_sentence = translated_sentences[index]
+            translated_sentence_info = SentenceInfoDtoResponse(
+                sentence=translated_sentence,
                 start_time=sentence.start_time,
                 end_time=sentence.end_time,
             )
-            for sentence in sentences
-        ]
-        print("tasks", tasks)
-        translated_sentences: list[SentenceInfoDto] = (await asyncio.gather(*tasks)) or []  # type: ignore
-        print("translated_sentences", translated_sentences)
-        if translated_sentences:
-            translated_sentences = [
-                SentenceInfoDto(
-                    sentence=sentence.sentence,
-                    start_time=sentence.start_time,
-                    end_time=sentence.end_time,
-                )
-                for sentence in translated_sentences
-            ]
-            return TranscriptToTranslateResponseDto(
-                message=[
-                    SentenceInfoDtoResponse(
-                        sentence=sentence.sentence,
-                        start_time=sentence.start_time,
-                        end_time=sentence.end_time,
-                    )
-                    for sentence in translated_sentences
-                ]
-            )
+            sentence_info_list.append(translated_sentence_info)
 
-        return TranscriptToTranslateResponseDto(message=[])
+        return TranscriptToTranslateResponseDto(message=sentence_info_list)
