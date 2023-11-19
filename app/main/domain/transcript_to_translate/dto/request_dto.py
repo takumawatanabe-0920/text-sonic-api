@@ -10,3 +10,4 @@ class SentenceInfoDto(BaseModel):
 
 class TranscriptToTranslateBodyDto(BaseModel):
     sentences: list[SentenceInfoDto]
+    target_language: str

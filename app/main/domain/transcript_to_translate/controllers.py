@@ -26,4 +26,6 @@ async def transcript_to_translate(
     ],
 ) -> TranscriptToTranslateResponseDto:
     logger.info("controller.transcript_to_translate")
-    return await transcript_to_translate_service.translate(reqBody.sentences)
+    return await transcript_to_translate_service.translate(
+        reqBody.sentences, reqBody.target_language
+    )

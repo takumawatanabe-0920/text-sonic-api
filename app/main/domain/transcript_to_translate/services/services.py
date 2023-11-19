@@ -21,13 +21,13 @@ class TranscriptToTranslateService:
         self.translate_text_client = translate_text_client
 
     async def translate(
-        self, sentences: list[SentenceInfoDto]
+        self, sentences: list[SentenceInfoDto], target_language: str
     ) -> TranscriptToTranslateResponseDto:
         logger.info("translate")
         print("sentences", sentences)
         translated_sentences = []
         tasks = [
-            self.translate_text_client.translate(sentence.sentence, "ja")
+            self.translate_text_client.translate(sentence.sentence, target_language)
             for sentence in sentences
         ]
         translated_sentences: list[str] = await asyncio.gather(*tasks)

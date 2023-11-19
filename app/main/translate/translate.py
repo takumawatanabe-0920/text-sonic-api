@@ -21,6 +21,6 @@ class TranslateTextClient:
         self.client = translate.Client(credentials=credentials)
 
     async def translate(self, text: str, target_language: str) -> str:
-        result = self.client.translate(text, target_language=target_language)
+        result = self.client.translate(text, target_language=target_language or "en")
 
         return result["translatedText"]
