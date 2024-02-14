@@ -20,3 +20,4 @@ langdetect
 alembic
 pytest
 google-cloud-translate
+google-api-python-client
