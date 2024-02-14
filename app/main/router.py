@@ -14,6 +14,7 @@ from app.main.domain.writings.controllers import router as writing_router
 from app.main.domain.transcript_to_translate.controllers import (
     router as transcript_to_translate_router,
 )
+from app.main.domain.contact.controllers import router as contact_router
 from app.main.infrastructure import models
 from app.main.infrastructure.database.base import engine
 from app.main.middlware.log_middleware import LogMiddleware
@@ -43,3 +44,4 @@ app.include_router(speech_to_text_router)
 app.include_router(user_router)
 app.include_router(auth_router)
 app.include_router(transcript_to_translate_router)
+app.include_router(contact_router)

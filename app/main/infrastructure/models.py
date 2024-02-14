@@ -34,3 +34,15 @@ class Writing(Base):
 
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.datetime.utcnow)
+
+
+class Contact(Base):
+    __tablename__ = "contact"
+
+    id = Column(String(36), primary_key=True, index=True, default=uuid.uuid4)
+    email = Column(String(255))
+    name = Column(String(255))
+    description = Column(String(5000))
+
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.datetime.utcnow)
